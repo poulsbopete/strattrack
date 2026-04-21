@@ -99,6 +99,14 @@ function lineFor123Summary(s) {
   return "";
 }
 
+/** Rows with wing/room sort before CRM-only rows so a recent MCP test note does not hide migrated history in the same top-N window. */
+function isCrmOnlyRow(s) {
+  const hasWing = !!(s.wing && String(s.wing).trim());
+  const hasRoom = !!(s.room && String(s.room).trim());
+  if (hasWing || hasRoom) return false;
+  return [s.account, s.opportunity, s.title].filter(Boolean).length >= 1;
+}
+
 const server = new McpServer(
   { name: "strattrack-elasticsearch", version: "0.1.0" },
   {
@@ -266,7 +274,7 @@ server.registerTool(
   "elastic_get_1_2_3",
   {
     description:
-      "Pull indexed notes for a ONE–TWO–THREE draft plus blocker highlights. Summary lines prefer account/opportunity/title; imported MemPalace rows use wing/room/title or a short content teaser when CRM fields are empty. Default: no date filter—sorts by note_date/created_at. Pass days>0 to restrict to created_at within the last N days.",
+      "Pull indexed notes for a ONE–TWO–THREE draft plus blocker highlights. Response includes index_doc_count (full index size) so you do not confuse an empty index with a skewed top-N window. Summary lines prefer account/opportunity/title; imported rows use wing/room/title or a short content teaser. Within the fetched hits, wing/room rows are listed before CRM-only rows so a stray test note does not occupy slot one alone. Pass days>0 to restrict to created_at within the last N days.",
     inputSchema: z.object({
       days: z
         .number()
@@ -295,11 +303,21 @@ server.registerTool(
             : { match_all: {} },
         _source: true,
       };
-      const res = await esFetch(`/${INDEX}/_search`, { method: "POST", body });
+      const [res, countRes] = await Promise.all([
+        esFetch(`/${INDEX}/_search`, { method: "POST", body }),
+        esFetch(`/${INDEX}/_count`, { method: "GET" }),
+      ]);
       const hits = res.hits?.hits || [];
+      const orderedHits = [...hits].sort((a, b) => {
+        const sa = a._source || {};
+        const sb = b._source || {};
+        const ra = isCrmOnlyRow(sa) ? 1 : 0;
+        const rb = isCrmOnlyRow(sb) ? 1 : 0;
+        return ra - rb;
+      });
       const blockers = [];
       const lines = [];
-      for (const h of hits) {
+      for (const h of orderedHits) {
         const s = h._source || {};
         if (Array.isArray(s.blocker_tags) && s.blocker_tags.length) {
           blockers.push({
@@ -319,6 +337,9 @@ server.registerTool(
         three: lines.slice(4, 8).join("; ") || "(fill from search)",
         blockers_highlight: blockers.slice(0, 8),
         sources_considered: hits.length,
+        index_doc_count: typeof countRes.count === "number" ? countRes.count : null,
+        index: INDEX,
+        elasticsearch_url: ES_URL,
       };
       return textResult(draft);
     } catch (e) {
