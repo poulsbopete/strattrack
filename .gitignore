@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and OS
+*.log
+npm-debug.log*
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build / coverage
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Docker / local data (adjust if you version docker volumes)
+*.local.sql
+data/
