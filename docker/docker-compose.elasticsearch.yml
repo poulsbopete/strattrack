@@ -1,5 +1,8 @@
 # Local single-node Elasticsearch for StratTrack development.
-# Usage: ./scripts/build-elastic-docker.sh
+# Docker: ./scripts/build-elastic-docker.sh
+# Podman: same script (auto-detect) or STRATTRACK_CONTAINER_RUNTIME=podman
+#
+# Podman rootless + mlock errors: merge podman-compat file (see script --podman-compat).
 
 name: strattrack
 
@@ -13,14 +16,14 @@ services:
     cap_add:
       - IPC_LOCK
     environment:
-      - node.name=strattrack-es01
-      - cluster.name=strattrack-local
-      - discovery.type=single-node
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      node.name: strattrack-es01
+      cluster.name: strattrack-local
+      discovery.type: single-node
+      bootstrap.memory_lock: "true"
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
       # Local dev only — enable security + TLS for prod-like testing.
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
+      xpack.security.enabled: "false"
+      xpack.security.http.ssl.enabled: "false"
     ulimits:
       memlock:
         soft: -1

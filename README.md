@@ -6,7 +6,7 @@ Production-oriented successor to mempalace: **Elasticsearch semantic search**, *
 
 **Remote:** `git@github.com:poulsbopete/strattrack.git`
 
-## Local Elasticsearch (Docker)
+## Local Elasticsearch (Docker or Podman)
 
 From the repo root:
 
@@ -14,7 +14,29 @@ From the repo root:
 ./scripts/build-elastic-docker.sh
 ```
 
-Uses `docker/docker-compose.elasticsearch.yml` (single-node, security off for local dev). Stop: `docker compose -f docker/docker-compose.elasticsearch.yml down`.
+The script uses **`docker compose`** if Docker is running, otherwise **`podman compose`** if Podman is running. To force one engine when both are installed:
+
+```bash
+STRATTRACK_CONTAINER_RUNTIME=podman ./scripts/build-elastic-docker.sh
+STRATTRACK_CONTAINER_RUNTIME=docker ./scripts/build-elastic-docker.sh
+```
+
+**Podman Desktop (rootless):** if Elasticsearch exits because of **memory lock** (`mlock`), use the compat overlay (disables `bootstrap.memory_lock`):
+
+```bash
+./scripts/build-elastic-docker.sh --podman-compat
+# or: STRATTRACK_PODMAN_COMPAT=1 ./scripts/build-elastic-docker.sh
+```
+
+Compose files: `docker/docker-compose.elasticsearch.yml` (single-node, security off for local dev). Optional merge: `docker/docker-compose.elasticsearch.podman-compat.yml`.
+
+**Stop** (use the same `-f` list you used to start, including `podman-compat` if applicable):
+
+```bash
+podman compose -f docker/docker-compose.elasticsearch.yml down
+# with compat overlay:
+podman compose -f docker/docker-compose.elasticsearch.yml -f docker/docker-compose.elasticsearch.podman-compat.yml down
+```
 
 ## Status
 

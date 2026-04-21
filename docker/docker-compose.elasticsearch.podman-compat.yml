@@ -1,0 +1,11 @@
+# Optional second compose file (merge with docker-compose.elasticsearch.yml).
+# Use when Podman is rootless and Elasticsearch fails on mlock/memlock
+# (e.g. bootstrap.memory_lock / IPC_LOCK). Does not change images or ports.
+#
+#   STRATTRACK_PODMAN_COMPAT=1 ./scripts/build-elastic-docker.sh
+#   ./scripts/build-elastic-docker.sh --podman-compat
+
+services:
+  elasticsearch:
+    environment:
+      bootstrap.memory_lock: "false"
