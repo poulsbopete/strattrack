@@ -15,7 +15,9 @@
 | A **shared Drive** (not only “My Drive” shared out) with a dedicated folder (e.g. `SA-Meeting-Notes/`) owned by a **group** or centrally managed space | Google Workspace admin | Stable ownership when people leave; clearer audit trail |
 | **Default access** for managers (Viewer vs Commenter) and whether **Content manager** is needed for metadata fixes | You + leadership | Reduces accidental deletes; matches trust model |
 | Whether **company policy** allows full **transcripts** in Drive (PII, regulated customers) | Legal / InfoSec | May require summary-only, retention, or redaction |
-| **Automation from Granola to that folder** — native bulk export is **limited** (e.g. CSV-oriented exports, cooldowns); many teams use **Zapier / Make** (or similar) to write **Markdown or Google Docs** per meeting | You + IT (is Zapier/Make approved?) | Realistic “always on” pipe into Drive |
+| **Granola → Google Drive** — Granola supports a **native save/export into Google** (no Zapier required) for getting notes into Drive/Docs; confirm which destinations and formats your org allows | You + IT | Prefer the vendor-native path first; fewer moving parts and connectors to approve |
+| **Elastic Security / internal InfoSec approval** if any StratTrack, MCP, or Elastic-side workflow will **read or index Google Drive** (Drive API, shared folders, or “AI over Drive” integrations) | Elastic Security + Google/Workspace stakeholders | Drive access for automation or assistants is a **deliberate security boundary**—get written approval before enabling connectors or service accounts |
+| **Optional third-party automation** — if you still need rules beyond Granola’s native flow, **Zapier / Make** (or similar) can write Markdown or Docs per meeting | You + IT (connector approval) | Only when native save is insufficient or you need multi-step fan-out |
 | **Naming convention**: date, account, deal hint in filename or first line | SA team | Makes Salesforce matching much easier |
 
 **Note on “AI on Drive”:** That usually means **Workspace AI (Gemini/Duet)** where licensed, **or** a separate app that reads files via API. It does **not** mean any assistant silently indexes the whole Drive. Ask explicitly: **May an approved integration read this Shared Drive and, if allowed, call a third-party model API—or must processing stay in Google-only tools?**
@@ -49,6 +51,7 @@ A small **integration service** (optionally invoked from Claude via **MCP**) tha
 | **Google Cloud project** with **Drive API** (read folder) and **Calendar API** (create events), using user OAuth **or** a **service account** with **domain-wide delegation** if jobs run unattended | Workspace admin |
 | **Shared Drive** + folder ID; confirm the integration identity can **read** (and optionally write sidecar metadata, e.g. “already processed”) | Admin |
 | **Data residency / vendor AI:** may note/transcript content go to **Anthropic** (API) or must processing stay in **Google** (Gemini/Vertex) or on-prem? | InfoSec |
+| **Elastic Security (or org equivalent)** approval before any **Google Drive API** access, indexing, or MCP connector that reads Shared Drive on behalf of Solution Architects | Elastic Security + team lead |
 | **Idempotency:** same file must not create duplicate Calendar reminders — use a stable key (e.g. Drive `fileId` + Opportunity Id) | You + eng |
 
 **Claude Desktop’s role:** Great for **guided** runs (“process these new files”) if **MCP** or a small server lists Drive and calls SFDC. **Fully automated nightly jobs** are usually a **scheduler + API** (same business logic), not Claude Desktop left open.
@@ -57,13 +60,13 @@ A small **integration service** (optionally invoked from Claude via **MCP**) tha
 
 ## 3. One paragraph for manager / IT (copy-paste)
 
-> We want Granola meeting notes to flow automatically into a **team Shared Drive** so leadership has visibility. We then want **approved automation** to **read new notes**, **match them to Salesforce opportunities**, **append structured SA updates** in the agreed Salesforce location, and **create Google Calendar reminders** for follow-ups. That needs: (1) a Shared Drive folder with correct **group permissions**, (2) an allowed **Granola → Drive** path (e.g. Zapier/Make or vendor export), (3) a **Salesforce integration user** with minimal write scope, (4) **Google APIs** for Drive and Calendar, and (5) **security sign-off** on whether content may be processed by third-party AI APIs or must stay in Google-only tools.
+> We want Granola meeting notes to land in a **team Shared Drive** so leadership has visibility—using Granola’s **native save to Google** where possible (no Zapier required for that step). We then want **approved automation** to **read new notes**, **match them to Salesforce opportunities**, **append structured SA updates** in the agreed Salesforce location, and **create Google Calendar reminders** for follow-ups. That needs: (1) a Shared Drive folder with correct **group permissions**, (2) **Elastic Security** (or equivalent internal InfoSec) **sign-off** if anything in our stack will **access Google Drive** via API or indexing, plus an allowed **Granola → Drive** path, (3) a **Salesforce integration user** with minimal write scope, (4) **Google APIs** for Drive and Calendar when automation reads or writes them, and (5) **security sign-off** on whether content may be processed by third-party AI APIs or must stay in Google-only tools.
 
 ---
 
 ## 4. Suggested order of operations
 
-1. **Shared Drive + Granola → Drive** (folder, sharing, automation tool approval).  
+1. **Shared Drive + Granola → Drive** (folder, sharing; use **Granola’s native Google save** first; **Elastic Security** approval if Drive will be read/indexed by StratTrack-related tooling; optional Zapier/Make only if needed).  
 2. **Salesforce “where SA notes live”** (single source of truth).  
 3. **Matching rules** (filename + account list first; AI assist second).  
 4. **Calendar vs SFDC Tasks** (pick one standard for “reach out” nudges).  
@@ -71,9 +74,11 @@ A small **integration service** (optionally invoked from Claude via **MCP**) tha
 
 ---
 
-## 5. Optional context: Zapier + Granola + Drive
+## 5. Optional context: Zapier / Make (only if native Granola → Google is not enough)
 
-Third-party workflow tools (e.g. Zapier) offer templates to save Granola outputs into Google Drive as Markdown or Docs. Treat this as **implementation detail** once IT approves the connector and data path—see Granola’s help center for **sharing** and **export** limits vs. automation.
+**Granola’s native flow to Google** is the first choice for getting notes into Drive or Google Docs—**no Zapier required** for that vendor path.
+
+Third-party workflow tools (e.g. Zapier, Make) remain useful when you need **extra orchestration** (fan-out to multiple systems, transforms, or schedules) that Granola does not cover. Treat them as **implementation detail** once IT approves the connector and data path—see Granola’s help center for **sharing**, **native Google integration**, and any **export** limits vs. automation.
 
 ---
 
