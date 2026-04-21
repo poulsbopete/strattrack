@@ -1,0 +1,52 @@
+{
+  "manifest_version": "0.3",
+  "name": "strattrack-elasticsearch",
+  "display_name": "StratTrack Elasticsearch",
+  "version": "0.1.0",
+  "description": "Local Elasticsearch MCP for StratTrack: index notes, search, and 1-2-3 drafts. Requires Docker/Podman Elasticsearch on your machine.",
+  "author": {
+    "name": "StratTrack",
+    "url": "https://github.com/poulsbopete/strattrack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/poulsbopete/strattrack.git"
+  },
+  "documentation": "https://github.com/poulsbopete/strattrack/blob/main/docs/MCP_CLAUDE_DESKTOP.md",
+  "server": {
+    "type": "node",
+    "entry_point": "server/strattrack-mcp.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/strattrack-mcp.mjs"],
+      "env": {
+        "ELASTICSEARCH_URL": "${user_config.elasticsearch_url}",
+        "STRATTRACK_INDEX": "${user_config.strattrack_index}"
+      }
+    }
+  },
+  "user_config": {
+    "elasticsearch_url": {
+      "type": "string",
+      "title": "Elasticsearch URL",
+      "description": "HTTP endpoint for your local StratTrack cluster (start with ./scripts/build-elastic-docker.sh).",
+      "default": "http://localhost:9200",
+      "required": false
+    },
+    "strattrack_index": {
+      "type": "string",
+      "title": "Index name",
+      "description": "Index for notes and drawers (run elastic_ensure_index or ./scripts/init-strattrack-index.sh once).",
+      "default": "strattrack_drawers",
+      "required": false
+    }
+  },
+  "keywords": ["elasticsearch", "strattrack", "mcp", "sales", "notes"],
+  "compatibility": {
+    "claude_desktop": ">=0.10.0",
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

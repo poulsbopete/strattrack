@@ -19,7 +19,7 @@ npm-debug.log*
 *.swp
 *.swo
 
-# Build / coverage
+# Build / coverage (includes built .mcpb from scripts/build-strattrack-mcpb.sh)
 dist/
 build/
 coverage/

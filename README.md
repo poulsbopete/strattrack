@@ -52,7 +52,9 @@ StratTrack’s **stdio MCP server** (`mcp/strattrack-mcp.mjs`) is how **every us
 
 | Doc | Purpose |
 |-----|---------|
-| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Cursor / Claude Desktop MCP config, env vars, tool list |
+| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Cursor + **Claude Desktop** (config paths, **`.mcpb`** install, manual JSON) |
+| **`./scripts/build-strattrack-mcpb.sh`** | Builds **`dist/strattrack-elasticsearch.mcpb`** (Claude Desktop Extension) |
+| **`extensions/strattrack-elasticsearch/manifest.json`** | MCPB manifest (`manifest_version` **0.3**) |
 | **`.cursor/mcp.json.example`** | Copy to `.cursor/mcp.json`, set absolute path to `strattrack-mcp.mjs` |
 | **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** | Optional: API keys in **Apple Keychain** + wrapper script |
 | **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** | **Optional, personal only:** one-time import from [MemPalace](https://github.com/MemPalace/mempalace) via `elastic_bulk_import_mempalace` |

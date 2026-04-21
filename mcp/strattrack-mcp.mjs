@@ -3,7 +3,7 @@
  * StratTrack MCP — stdio server talking to local Elasticsearch (Docker/Podman).
  * Log only to stderr; stdout is reserved for MCP JSON-RPC.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -11,9 +11,17 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const INDEX_SETTINGS = JSON.parse(
-  readFileSync(join(__dirname, "..", "docker", "strattrack-drawers-index.json"), "utf8")
-);
+const INDEX_JSON_CANDIDATES = [
+  join(__dirname, "strattrack-drawers-index.json"),
+  join(__dirname, "..", "docker", "strattrack-drawers-index.json"),
+];
+const indexJsonPath = INDEX_JSON_CANDIDATES.find((p) => existsSync(p));
+if (!indexJsonPath) {
+  throw new Error(
+    "strattrack-drawers-index.json not found beside strattrack-mcp.mjs (Claude .mcpb bundle) or at ../docker/ (git checkout)."
+  );
+}
+const INDEX_SETTINGS = JSON.parse(readFileSync(indexJsonPath, "utf8"));
 
 const ES_URL = (process.env.ELASTICSEARCH_URL || "http://localhost:9200").replace(/\/$/, "");
 const INDEX = process.env.STRATTRACK_INDEX || "strattrack_drawers";

@@ -15,7 +15,7 @@ description: StratTrack team standard — local Elasticsearch via MCP for runnin
 
 1. Repo path available; under repo: `./scripts/build-elastic-docker.sh` (or Podman compat variant) brings up **http://localhost:9200**.
 2. `cd mcp && npm install` once.
-3. Claude Desktop MCP entry: `node /absolute/path/to/strattrack/mcp/strattrack-mcp.mjs` with optional `ELASTICSEARCH_URL` and `STRATTRACK_INDEX`. See repo **`docs/MCP_CLAUDE_DESKTOP.md`**.
+3. **Claude Desktop:** install **`dist/strattrack-elasticsearch.mcpb`** (run `./scripts/build-strattrack-mcpb.sh` first) or add a manual `mcpServers` entry — **`docs/MCP_CLAUDE_DESKTOP.md`**.
 
 ## Workflow
 

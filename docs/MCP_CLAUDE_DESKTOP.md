@@ -46,7 +46,29 @@ So: keep **Elasticsearch** running all the time; let the **IDE** launch the **MC
 
 Do **not** put API keys in the JSON `env` block. Use Apple’s **Keychain** and the wrapper script **`scripts/run-strattrack-mcp-from-keychain.sh`** so Claude Desktop only stores non-secret env vars. Full steps: **[MACOS_KEYCHAIN.md](./MACOS_KEYCHAIN.md)**.
 
-## Claude Desktop config
+## Claude Desktop — configuration file location
+
+| OS | File |
+|----|------|
+| **macOS** | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| **Windows** | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+Quit Claude Desktop before editing; reopen after saving.
+
+## Claude Desktop — one-click extension (`.mcpb`)
+
+StratTrack ships a **Desktop Extension** manifest and a script that zips a self-contained bundle (server + `node_modules` + index JSON).
+
+1. From the repo root: **`./scripts/build-strattrack-mcpb.sh`** (requires network once for `npm install` inside the bundle).
+2. Output: **`dist/strattrack-elasticsearch.mcpb`** (ignored by git — rebuild after pulling updates).
+3. In Claude Desktop: **Settings → Extensions → Install Extension…** (or **Developer → Install extension** depending on version) and select the `.mcpb` file.
+4. When prompted, confirm defaults (**`http://localhost:9200`**, index **`strattrack_drawers`**) or adjust for your machine.
+
+Official MCPB reference: [Building MCPB](https://claude.com/docs/connectors/building/mcpb).
+
+Manifest source: **`extensions/strattrack-elasticsearch/manifest.json`**.
+
+## Claude Desktop — manual `mcpServers` entry
 
 Edit your Claude Desktop MCP configuration and add a server entry (paths must be **absolute** on your Mac):
 
