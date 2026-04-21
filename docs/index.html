@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StratTrack — Elastic SAs, Salesforce &amp; AI</title>
+  <meta name="description" content="Why StratTrack matters for Solution Architects: opportunity context, timely AI updates, account planning, and closing more deals." />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --border: #30363d;
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); }
+    a { color: var(--accent); }
+    .deck {
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .slides {
+      display: flex;
+      height: 100%;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 52rem;
+      margin: 0 auto;
+      border-left: 3px solid var(--accent);
+      background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+    }
+    .slide h1 {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 650;
+      line-height: 1.15;
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .slide h2 {
+      font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+      font-weight: 600;
+      margin: 0 0 1rem;
+      color: var(--accent);
+    }
+    .slide p, .slide li {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 42rem;
+    }
+    .slide ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+    .slide li { margin-bottom: 0.5rem; color: var(--text); }
+    .slide li span.muted { color: var(--muted); }
+    .tagline { font-size: clamp(1.1rem, 2.2vw, 1.35rem); color: var(--accent2); font-weight: 500; margin-bottom: 1rem; }
+    .footer-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0.65rem 1rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      z-index: 10;
+    }
+    .dots { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .dots button {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: var(--border);
+      cursor: pointer;
+      padding: 0;
+    }
+    .dots button[aria-current="true"] { background: var(--accent); }
+    .keys { display: none; }
+    @media (min-width: 720px) {
+      .keys { display: inline; }
+    }
+    .cta {
+      display: inline-block;
+      margin-top: 1.25rem;
+      padding: 0.65rem 1.1rem;
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 6px;
+    }
+    .cta:hover { filter: brightness(1.08); }
+    .logo-row { margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+  </style>
+</head>
+<body>
+  <div class="deck" role="region" aria-roledescription="carousel" aria-label="StratTrack presentation">
+    <div class="slides" id="slides" tabindex="0">
+      <section class="slide" aria-label="Title">
+        <div class="logo-row">StratTrack · GitHub Pages</div>
+        <p class="tagline">For Elastic Solution Architects</p>
+        <h1>Turn opportunity chaos into timely, AI-assisted wins</h1>
+        <p>
+          A short pitch on why a <strong>local Elasticsearch</strong> notebook plus
+          <strong>Claude Desktop</strong> MCP helps you live in <strong>Salesforce</strong>—with better context,
+          faster updates, and clearer account plans—so you can <strong>close more opportunities</strong>.
+        </p>
+        <a class="cta" href="https://github.com/poulsbopete/strattrack">Open the StratTrack repo</a>
+      </section>
+
+      <section class="slide" aria-label="The job">
+        <h2>The SA job is a firehose</h2>
+        <ul>
+          <li>Dozens of <strong>opportunities</strong> across stages, regions, and solution areas.</li>
+          <li>Every meeting produces nuance—technical blockers, champions, procurement, Elastic Security vs Observability positioning.</li>
+          <li><span class="muted">Salesforce captures the record; your head (and Slack) captures the story. The gap is expensive.</span></li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="CRM gap">
+        <h2>Salesforce is necessary—not sufficient</h2>
+        <ul>
+          <li>Opportunity fields are great for <strong>stage, amount, close date</strong>—not for rich running narrative.</li>
+          <li>AI assistants in the chat window <strong>forget tomorrow</strong> what you typed today unless you re-feed context.</li>
+          <li>Account planning needs <strong>continuity</strong>: last week’s discovery, yesterday’s architecture sketch, today’s exec ask.</li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="StratTrack">
+        <h2>StratTrack: your durable SA memory</h2>
+        <p>
+          <strong>StratTrack</strong> stores structured notes in <strong>Elasticsearch on your machine</strong>
+          (Docker/Podman), wired to <strong>Claude Desktop</strong> via MCP tools:
+          <code>elastic_add_note</code>, <code>elastic_search_opp</code>, <code>elastic_get_1_2_3</code>.
+        </p>
+        <ul>
+          <li><strong>Searchable</strong> by account, opportunity, stage, wing/room tags, and full text.</li>
+          <li><strong>Yours</strong>—local index, optional auth—built for SA workflow, not a generic cloud scratchpad.</li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="Why ES">
+        <h2>Why Elasticsearch for this?</h2>
+        <ul>
+          <li><strong>Instant retrieval</strong> when you ask the model to “pull everything on Acme renewal blockers.”</li>
+          <li><strong>Structured + text</strong>: tie notes to opportunity names, stages, and blocker tags for better answers.</li>
+          <li><strong>Completion history</strong>: what the model produced stays indexed—audit trail beyond a single chat.</li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="AI timely">
+        <h2>AI that stays on time—not just on brand</h2>
+        <ul>
+          <li><strong>Before a call:</strong> search the account; draft talking points from recent notes and 1–2–3 themes.</li>
+          <li><strong>After a call:</strong> append a crisp <code>elastic_add_note</code> with decisions, risks, and next steps.</li>
+          <li><strong>Fewer tokens:</strong> the model <strong>searches the index</strong> instead of you pasting ten pages of history every time.</li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="Account planning">
+        <h2>Account planning that compounds</h2>
+        <ul>
+          <li>Build a <strong>living map</strong> of stakeholders, use cases, and competitive landmines per account.</li>
+          <li>Use <code>elastic_get_1_2_3</code>-style summaries for <strong>weekly rhythm</strong>: what moved, what’s blocked, what’s next.</li>
+          <li>Align narrative with <strong>Salesforce opportunity reality</strong>—same names, same deals, less drift.</li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="Close more">
+        <h2>Close more opportunities</h2>
+        <ul>
+          <li><strong>Faster follow-through</strong> when next steps live in one searchable place.</li>
+          <li><strong>Fewer dropped threads</strong> when blockers and IT/security notes resurface automatically in search.</li>
+          <li><strong>Better coaching handoffs</strong>—your manager or pod can reason over the same indexed context (future-friendly).</li>
+        </ul>
+      </section>
+
+      <section class="slide" aria-label="Getting started">
+        <h2>Getting started (high level)</h2>
+        <ol style="margin:0;padding-left:1.25rem;font-size:clamp(1rem,2vw,1.15rem);line-height:1.6;color:var(--text);">
+          <li>Run local Elasticsearch (<code>./scripts/build-elastic-docker.sh</code> in the repo).</li>
+          <li>Create the index (<code>./scripts/init-strattrack-index.sh</code>).</li>
+          <li>Install the MCP extension from <a href="https://github.com/poulsbopete/strattrack/releases">GitHub Releases</a> (<code>strattrack-elasticsearch.mcpb</code>).</li>
+          <li>Use Claude Desktop to add notes and search before big moments.</li>
+        </ol>
+        <p style="margin-top:1rem;">
+          Full steps: <a href="https://github.com/poulsbopete/strattrack/blob/main/README.md">README</a> ·
+          MCP wiring: <a href="https://github.com/poulsbopete/strattrack/blob/main/docs/MCP_CLAUDE_DESKTOP.md">MCP_CLAUDE_DESKTOP.md</a>
+        </p>
+      </section>
+
+      <section class="slide" aria-label="GitHub Pages">
+        <h2>Enable this deck on GitHub Pages</h2>
+        <p>
+          In the repository: <strong>Settings → Pages → Build and deployment → Source</strong>:
+          choose <strong>Deploy from a branch</strong>, branch <strong>main</strong>, folder <strong>/docs</strong>, then save.
+          The site URL will be <code>https://&lt;user-or-org&gt;.github.io/strattrack/</code> (path may vary for forks).
+        </p>
+        <p>
+          This folder uses <code>.nojekyll</code> so GitHub serves static HTML. Other files under <code>docs/</code> may still be reachable by URL if the repository is public—relocate sensitive notes out of <code>docs/</code> if that matters.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <div class="footer-bar">
+    <div class="dots" id="dots" aria-hidden="true"></div>
+    <span><span class="keys">← → or swipe · </span><span id="counter">1 / 10</span></span>
+  </div>
+
+  <script>
+    (function () {
+      var slides = document.getElementById("slides");
+      var total = slides.children.length;
+      var index = 0;
+      var dots = document.getElementById("dots");
+      var counter = document.getElementById("counter");
+
+      for (var i = 0; i < total; i++) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("aria-label", "Go to slide " + (i + 1));
+        b.addEventListener("click", function (j) {
+          return function () { go(j); };
+        }(i));
+        dots.appendChild(b);
+      }
+
+      function paint() {
+        slides.style.transform = "translateX(" + -index * 100 + "%)";
+        counter.textContent = index + 1 + " / " + total;
+        var buttons = dots.querySelectorAll("button");
+        for (var k = 0; k < buttons.length; k++) {
+          buttons[k].setAttribute("aria-current", k === index ? "true" : "false");
+        }
+      }
+
+      function go(i) {
+        index = Math.max(0, Math.min(total - 1, i));
+        paint();
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+          e.preventDefault();
+          go(index + 1);
+        } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+          e.preventDefault();
+          go(index - 1);
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          go(0);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          go(total - 1);
+        }
+      });
+
+      var touchStartX = null;
+      slides.addEventListener("touchstart", function (e) {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      slides.addEventListener("touchend", function (e) {
+        if (touchStartX == null) return;
+        var dx = e.changedTouches[0].screenX - touchStartX;
+        touchStartX = null;
+        if (dx < -48) go(index + 1);
+        else if (dx > 48) go(index - 1);
+      }, { passive: true });
+
+      slides.focus({ preventScroll: true });
+      paint();
+    })();
+  </script>
+</body>
+</html>

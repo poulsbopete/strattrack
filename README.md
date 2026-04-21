@@ -3,7 +3,8 @@
 Elasticsearch-backed notes and search for **Solution Architects**, with **Salesforce** alignment in scope. **Team default:** StratTrack **MCP** (`elastic_add_note`, `elastic_search_opp`, `elastic_get_1_2_3`).
 
 **Remote:** `git@github.com:poulsbopete/strattrack.git`  
-**Releases / npm package:** tag `v*` → GitHub Packages + `.mcpb` on Releases — **[docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)**
+**Releases / npm package:** tag `v*` → GitHub Packages + `.mcpb` on Releases — **[docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)**  
+**GitHub Pages (SA pitch deck):** repo **Settings → Pages →** branch **main**, folder **`/docs`** — site root is **[docs/index.html](docs/index.html)** (e.g. `https://poulsbopete.github.io/strattrack/` once enabled).
 
 ## Why this matters
 
