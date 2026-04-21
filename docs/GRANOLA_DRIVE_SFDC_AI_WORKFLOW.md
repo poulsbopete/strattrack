@@ -12,11 +12,11 @@
 
 | Ask | Who | Why |
 |-----|-----|-----|
-| A **shared Drive** (not only “My Drive” shared out) with a dedicated folder (e.g. `SE-Meeting-Notes/`) owned by a **group** or centrally managed space | Google Workspace admin | Stable ownership when people leave; clearer audit trail |
+| A **shared Drive** (not only “My Drive” shared out) with a dedicated folder (e.g. `SA-Meeting-Notes/`) owned by a **group** or centrally managed space | Google Workspace admin | Stable ownership when people leave; clearer audit trail |
 | **Default access** for managers (Viewer vs Commenter) and whether **Content manager** is needed for metadata fixes | You + leadership | Reduces accidental deletes; matches trust model |
 | Whether **company policy** allows full **transcripts** in Drive (PII, regulated customers) | Legal / InfoSec | May require summary-only, retention, or redaction |
 | **Automation from Granola to that folder** — native bulk export is **limited** (e.g. CSV-oriented exports, cooldowns); many teams use **Zapier / Make** (or similar) to write **Markdown or Google Docs** per meeting | You + IT (is Zapier/Make approved?) | Realistic “always on” pipe into Drive |
-| **Naming convention**: date, account, deal hint in filename or first line | SE team | Makes Salesforce matching much easier |
+| **Naming convention**: date, account, deal hint in filename or first line | SA team | Makes Salesforce matching much easier |
 
 **Note on “AI on Drive”:** That usually means **Workspace AI (Gemini/Duet)** where licensed, **or** a separate app that reads files via API. It does **not** mean any assistant silently indexes the whole Drive. Ask explicitly: **May an approved integration read this Shared Drive and, if allowed, call a third-party model API—or must processing stay in Google-only tools?**
 

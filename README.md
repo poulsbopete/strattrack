@@ -1,6 +1,6 @@
 # StratTrack
 
-Production-oriented successor to mempalace: **Elasticsearch semantic search**, **Salesforce alignment**, and **team-scale** visibility for Sales Engineering workflows.
+Production-oriented successor to mempalace: **Elasticsearch semantic search**, **Salesforce alignment**, and **team-scale** visibility for Solution Architect workflows.
 
 ## Repository
 

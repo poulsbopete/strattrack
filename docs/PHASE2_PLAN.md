@@ -1,6 +1,6 @@
 # StratTrack Phase 2 — MCP Production Plan
 
-**Goal:** Harden the four MCP tools for daily Sales Engineering use without breaking existing Claude workflows or the Elasticsearch index schema.
+**Goal:** Harden the four MCP tools for daily Solution Architect use without breaking existing Claude workflows or the Elasticsearch index schema.
 
 **Reference implementation:** `mcp_server.js` (add when present in this repo).
 
@@ -53,7 +53,7 @@
 **Acceptance:**
 
 - OTTO / PayPal / USAA-style fixtures show blockers in `blockers_highlight` when notes contain those themes.
-- Generation completes within product target (&lt; 5 min wall clock is workflow; instrument p95 latency in logs).
+- Generation completes within product target (< 5 min wall clock is workflow; instrument p95 latency in logs).
 
 ---
 
@@ -138,7 +138,7 @@
 
 ## Success metrics (recap)
 
-- Search precision &gt; 80% on curated blocker query set (measure in dev with labeled fixtures).
+- Search precision > 80% on curated blocker query set (measure in dev with labeled fixtures).
 - 1-2-3 consistently lists top blockers without manual curation.
 - Tags appear automatically on representative notes.
 - No production incidents from log volume or unhandled errors in MCP path.
