@@ -6,6 +6,18 @@ MemPalace models memory as **wings**, **rooms**, and **drawers** (verbatim conte
 
 This repo does **not** embed the MemPalace Python package. You export or extract drawers yourself, then ingest with the MCP tool **`elastic_bulk_import_mempalace`** (same JSON shape can be used for any wing/room–style bulk load, not only MemPalace).
 
+### One-command migration script (recommended)
+
+From the repo root (with MemPalace + Chroma data and local Elasticsearch running):
+
+```bash
+pip install -r scripts/requirements-mempalace-migrate.txt
+python3 scripts/mempalace_to_elasticsearch.py --ensure-index
+# dry run: python3 scripts/mempalace_to_elasticsearch.py --dry-run
+```
+
+Options: `--palace ~/.mempalace/palace`, `--es-url`, `--index`, `--dry-run`. Read the script header for details.
+
 ## Target document shape
 
 Each indexed document can include:
