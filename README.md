@@ -6,6 +6,16 @@ Production-oriented successor to mempalace: **Elasticsearch semantic search**, *
 
 **Remote:** `git@github.com:poulsbopete/strattrack.git`
 
+## Local Elasticsearch (Docker)
+
+From the repo root:
+
+```bash
+./scripts/build-elastic-docker.sh
+```
+
+Uses `docker/docker-compose.elasticsearch.yml` (single-node, security off for local dev). Stop: `docker compose -f docker/docker-compose.elasticsearch.yml down`.
+
 ## Status
 
 | Phase | Description |

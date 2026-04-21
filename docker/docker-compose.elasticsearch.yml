@@ -1,0 +1,45 @@
+# Local single-node Elasticsearch for StratTrack development.
+# Usage: ./scripts/build-elastic-docker.sh
+
+name: strattrack
+
+services:
+  elasticsearch:
+    build:
+      context: ./elasticsearch
+      dockerfile: Dockerfile
+    image: strattrack-elasticsearch:local
+    container_name: strattrack-elasticsearch
+    cap_add:
+      - IPC_LOCK
+    environment:
+      - node.name=strattrack-es01
+      - cluster.name=strattrack-local
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      # Local dev only — enable security + TLS for prod-like testing.
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - strattrack_es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s || exit 1",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 40s
+
+volumes:
+  strattrack_es_data:
+    name: strattrack_es_data
