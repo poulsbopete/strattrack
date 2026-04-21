@@ -5,6 +5,11 @@ Elasticsearch-backed notes and search for **Solution Architects**, with **Salesf
 **Remote:** `git@github.com:poulsbopete/strattrack.git`  
 **Releases / npm package:** tag `v*` → GitHub Packages + `.mcpb` on Releases — **[docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)**
 
+## Why this matters
+
+- **Completion history on your machine.** Notes and structured outputs live in **local Elasticsearch**, so you keep a durable record of what the model produced and when—not only what is visible in the current chat window.
+- **Fewer tokens, same answers.** The assistant can **search and pull prior completions** from the index instead of you pasting long context again or asking it to regenerate the same summaries. That cuts input tokens and speeds up follow-ups on accounts, opportunities, and technical notes you already stored.
+
 ## Quick start
 
 | Step | Command / link |
