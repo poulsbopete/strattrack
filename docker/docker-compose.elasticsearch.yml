@@ -14,6 +14,8 @@ services:
       dockerfile: Dockerfile
     image: strattrack-elasticsearch:local
     container_name: strattrack-elasticsearch
+    # Survive Docker daemon restart / machine reboot until explicitly stopped (`docker compose … down`).
+    restart: unless-stopped
     cap_add:
       - IPC_LOCK
     environment:

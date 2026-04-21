@@ -144,7 +144,7 @@ if [[ "${PODMAN_COMPAT}" == true ]]; then
 fi
 
 echo ""
-echo "StratTrack local Elasticsearch is up."
+echo "StratTrack local Elasticsearch is up (restart policy: unless-stopped — survives reboot until 'compose down')."
 echo "  HTTP:   http://localhost:9200"
 echo "  Stop:   cd \"${ROOT_DIR}\" && ${COMPOSE_BACKEND} compose -f docker/docker-compose.elasticsearch.yml${COMPAT_FILES} down"
 echo "  Logs:   cd \"${ROOT_DIR}\" && ${COMPOSE_BACKEND} compose -f docker/docker-compose.elasticsearch.yml${COMPAT_FILES} logs -f elasticsearch"

@@ -4,6 +4,14 @@ StratTrack’s compose file runs Elasticsearch with **`xpack.security.enabled=fa
 
 ---
 
+## Persistence (always-on data plane)
+
+The compose service sets **`restart: unless-stopped`**: after a machine reboot, Docker (or Podman) will start **Elasticsearch** again until you run **`docker compose … down`**. That is what you want for a stable **`localhost:9200`** endpoint for Cursor/MCP.
+
+The **MCP Node process** is **not** configured as a daemon here — see **[MCP_CLAUDE_DESKTOP.md](./MCP_CLAUDE_DESKTOP.md#always-on--what-should-run-247)**.
+
+---
+
 ## 1. Confirm the container is running
 
 From the repo root (use `docker` or `podman` to match how you started the stack):

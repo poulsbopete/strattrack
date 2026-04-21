@@ -17,6 +17,16 @@ That combination replaces the *function* MemPalace served for one person — **s
 - **Stop the manual run:** press `Ctrl+C` when you are done sanity-checking.
 - **To actually test tools:** add the MCP to **Claude Desktop** or **Cursor** (below) so the app **spawns** its own `node …strattrack-mcp.mjs` process. You usually **do not** run the server by hand at the same time (two processes would fight if both used stdio — here only the IDE’s child process should run the MCP).
 
+## “Always on” — what should run 24/7?
+
+| Layer | Always-on? | Why |
+|-------|------------|-----|
+| **Elasticsearch (Docker/Podman)** | **Yes (recommended)** | Holds your index and answers `http://localhost:9200` whenever tools run. Compose uses **`restart: unless-stopped`** so the container comes back after reboot until you `down` it. |
+| **MCP Node process (`strattrack-mcp.mjs`)** | **No (stdio design)** | This server speaks **MCP over stdin/stdout**. It is meant to be **started by Cursor or Claude Desktop** when a chat needs tools, then stopped when the session ends. Leaving a manual `node strattrack-mcp.mjs` in a terminal does **not** help the IDE (different process, no stdin pipe). |
+| **Future: HTTP MCP** | Possible | A long‑lived **network** MCP server is a separate mode (not implemented here). If you need that later, it would be a small HTTP service + client config change. |
+
+So: keep **Elasticsearch** running all the time; let the **IDE** launch the **MCP** when needed.
+
 ## Prerequisites
 
 1. Local Elasticsearch is running (`./scripts/build-elastic-docker.sh` or Podman equivalent).

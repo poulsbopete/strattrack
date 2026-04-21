@@ -86,7 +86,7 @@ STRATTRACK_CONTAINER_RUNTIME=docker ./scripts/build-elastic-docker.sh
 # or: STRATTRACK_PODMAN_COMPAT=1 ./scripts/build-elastic-docker.sh
 ```
 
-Compose files: `docker/docker-compose.elasticsearch.yml` (single-node, security off for local dev). Optional merge: `docker/docker-compose.elasticsearch.podman-compat.yml`.
+Compose files: `docker/docker-compose.elasticsearch.yml` (single-node, security off for local dev). Elasticsearch uses **`restart: unless-stopped`** so it stays up across reboots until you `down` it. The **MCP** process stays **IDE-spawned** (stdio); see **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md#always-on--what-should-run-247)**. Optional merge: `docker/docker-compose.elasticsearch.podman-compat.yml`.
 
 **Access / “login”:** default image has **no password** — open **[http://localhost:9200](http://localhost:9200)** or use `curl`. Shell into the container, optional Kibana/security: **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)**.
 
