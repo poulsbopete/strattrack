@@ -17,7 +17,17 @@ Elasticsearch-backed notes and search for **Solution Architects**, with **Salesf
 | 1. Elasticsearch | `./scripts/build-elastic-docker.sh` |
 | 2. Create index | `./scripts/init-strattrack-index.sh` |
 | 3. MCP deps | `cd mcp && npm install` |
-| 4. Claude Desktop 4 (primary) | **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** — `.mcpb` or manual `mcpServers`. *Cursor:* copy **`.cursor/mcp.json.example`** |
+| 4. Claude Desktop 4 (primary) | **Releases → download → install** (steps below). Details: **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)**. *Cursor:* **`.cursor/mcp.json.example`** |
+
+#### Step 4 — Claude Desktop 4 (from GitHub Releases)
+
+1. Open **[github.com/poulsbopete/strattrack/releases](https://github.com/poulsbopete/strattrack/releases)** and pick the latest release (or the version you want).
+2. Under **Assets**, download **`strattrack-elasticsearch.mcpb`** to your machine (e.g. Downloads).
+3. Open **Claude Desktop** → **Settings → Extensions → Install Extension…** (wording may be **Developer → Install extension** in some builds). Choose the downloaded `.mcpb`. On macOS, **double-clicking** the file may open the same flow if `.mcpb` is associated with Claude Desktop.
+4. When the extension prompts for connection details, keep defaults **`http://localhost:9200`** and index **`strattrack_drawers`** unless your Elasticsearch URL or index name differs.
+5. Restart or reload Claude Desktop if it does not pick up the extension immediately. Elasticsearch from steps 1–2 should already be running.
+
+**Alternatives:** build a local `.mcpb` from the repo (`./scripts/build-strattrack-mcpb.sh`) or add a manual `mcpServers` entry — see **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)**.
 
 More: **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)** (curl, container shell), **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** (secrets), **[docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md)** (Drive / SFDC / IT brief).
 

@@ -59,18 +59,26 @@ Quit Claude Desktop before editing; reopen after saving.
 
 ## Claude Desktop — one-click extension (`.mcpb`)
 
-StratTrack ships a **Desktop Extension** manifest and a script that zips a self-contained bundle (server + `node_modules` + index JSON).
+StratTrack ships a **Desktop Extension** bundle (server + `node_modules` + index JSON) as **`strattrack-elasticsearch.mcpb`**.
+
+### Install from GitHub Releases (recommended)
+
+1. Open **[Releases](https://github.com/poulsbopete/strattrack/releases)** for this repository.
+2. Under **Assets** on the release you want, download **`strattrack-elasticsearch.mcpb`**.
+3. In **Claude Desktop**: **Settings → Extensions → Install Extension…** (or **Developer → Install extension**) and select the downloaded file. On macOS, **double-click** the `.mcpb` if your system opens it with Claude Desktop.
+4. When prompted, confirm defaults (**`http://localhost:9200`**, index **`strattrack_drawers`**) or adjust for your machine.
+
+CI attaches each tagged build to Releases — see **[GITHUB_PUBLISH.md](./GITHUB_PUBLISH.md)**.
+
+### Build the `.mcpb` locally (developers)
 
 1. From the repo root: **`./scripts/build-strattrack-mcpb.sh`** (requires network once for `npm install` inside the bundle).
 2. Output: **`dist/strattrack-elasticsearch.mcpb`** (ignored by git — rebuild after pulling updates).
-3. In Claude Desktop: **Settings → Extensions → Install Extension…** (or **Developer → Install extension** depending on version) and select the `.mcpb` file.
-4. When prompted, confirm defaults (**`http://localhost:9200`**, index **`strattrack_drawers`**) or adjust for your machine.
+3. Install in Claude Desktop as in step 3 above.
 
 Official MCPB reference: [Building MCPB](https://claude.com/docs/connectors/building/mcpb).
 
 Manifest source: **`extensions/strattrack-elasticsearch/manifest.json`**.
-
-**Published builds:** after a maintainer pushes a version tag, GitHub Actions attaches **`strattrack-elasticsearch.mcpb`** to a **Release** (and publishes **`@poulsbopete/strattrack-mcp`** to GitHub Packages). See **[GITHUB_PUBLISH.md](./GITHUB_PUBLISH.md)**.
 
 ## Claude Desktop — manual `mcpServers` entry
 
