@@ -73,7 +73,7 @@ CI attaches each tagged build to Releases — see **[GITHUB_PUBLISH.md](./GITHUB
 ### Build the `.mcpb` locally (developers)
 
 1. From the repo root: **`./scripts/build-strattrack-mcpb.sh`** (requires network once for `npm install` inside the bundle).
-2. Output: **`dist/strattrack-elasticsearch.mcpb`** (ignored by git — rebuild after pulling updates).
+2. Output: **`dist/strattrack-elasticsearch.mcpb`** (**not committed** — `dist/` is in `.gitignore`, so a local rebuild never shows up as a new Git version; it only updates the file on disk). Rebuild after pulling MCP changes. For a **published** version with a downloadable `.mcpb` on GitHub, push a new SemVer tag — **[GITHUB_PUBLISH.md](./GITHUB_PUBLISH.md)**.
 3. Install in Claude Desktop as in step 3 above.
 
 Official MCPB reference: [Building MCPB](https://claude.com/docs/connectors/building/mcpb).
