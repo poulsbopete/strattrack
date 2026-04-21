@@ -92,7 +92,7 @@ const server = new McpServer(
       "StratTrack MCP uses local Elasticsearch (default http://localhost:9200, index strattrack_drawers).",
       "Team workflow: use elastic_add_note to append running history for completions; elastic_search_opp and elastic_get_1_2_3 to retrieve and summarize indexed context.",
       "After starting Docker/Podman ES, call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing.",
-      "elastic_bulk_import is optional: batched wing/room-shaped rows for one-off or legacy data; max 100 items per call. Prefer elastic_add_note for ongoing work.",
+      "elastic_bulk_import is optional: batched rows for one-off or legacy data; max 100 items per call. Prefer elastic_add_note for ongoing work.",
     ].join(" "),
   }
 );
@@ -137,23 +137,19 @@ server.registerTool(
   "elastic_search_opp",
   {
     description:
-      "Search indexed notes and history: multi_match on content, opportunity, and title. Optional filters: account, stage, wing, room. Use after elastic_add_note (or bulk import) to pull context into completions.",
+      "Search indexed notes and history: multi_match on content, opportunity, and title. Optional filters: account, stage. Use after elastic_add_note (or bulk import) to pull context into completions.",
     inputSchema: z.object({
       query: z.string().min(1).describe("Search text"),
       account_filter: z.string().optional().describe("Exact account keyword filter"),
       stage_filter: z.string().optional().describe("Exact stage keyword filter"),
-      wing: z.string().optional().describe("Optional wing taxonomy filter"),
-      room: z.string().optional().describe("Optional room taxonomy filter"),
       limit: z.number().int().min(1).max(50).optional().default(10),
     }),
   },
-  async ({ query, account_filter, stage_filter, wing, room, limit }) => {
+  async ({ query, account_filter, stage_filter, limit }) => {
     try {
       const filter = [];
       if (account_filter) filter.push({ term: { account: account_filter } });
       if (stage_filter) filter.push({ term: { stage: stage_filter } });
-      if (wing) filter.push({ term: { wing } });
-      if (room) filter.push({ term: { room } });
 
       const shouldBoost = [];
       const blockerTerms = ["RUM", "OTel", "billing", "GovCloud", "anomaly", "blocker", "parity"];
@@ -221,8 +217,6 @@ server.registerTool(
       opportunity: z.string().optional(),
       account: z.string().optional(),
       stage: z.string().optional(),
-      wing: z.string().optional(),
-      room: z.string().optional(),
       mempalace_drawer_id: z
         .string()
         .optional()
@@ -333,8 +327,6 @@ server.registerTool(
 );
 
 const bulkImportRow = z.object({
-  wing: z.string().optional(),
-  room: z.string().optional(),
   content: z.string().min(1),
   title: z.string().optional(),
   mempalace_drawer_id: z
@@ -351,7 +343,7 @@ server.registerTool(
   "elastic_bulk_import",
   {
     description:
-      "Optional bulk import: up to 100 rows with wing/room/content. For day-to-day indexing use elastic_add_note instead. Use each row's optional stable id for upserts; split large batches into multiple calls.",
+      "Optional bulk import: up to 100 rows (content plus optional title, account, opportunity, stage, blocker_tags). For day-to-day indexing use elastic_add_note instead. Use each row's optional stable id for upserts; split large batches into multiple calls.",
     inputSchema: z.object({
       items: z.array(bulkImportRow).min(1).max(100),
       source: z.string().optional().default("strattrack_bulk_import"),

@@ -122,7 +122,7 @@ Keep **Elasticsearch running** (`./scripts/build-elastic-docker.sh`) while you t
 | `elastic_add_note` | Index a single document |
 | `elastic_get_1_2_3` | Draft ONE–TWO–THREE from recent docs |
 | `elastic_sync_to_sf` | Stub until Phase 3+ |
-| `elastic_bulk_import` | Optional bulk import: up to 100 batched rows (wing/room/content); day-to-day use **`elastic_add_note`** instead |
+| `elastic_bulk_import` | Optional bulk import: up to 100 batched rows (content + optional metadata); day-to-day use **`elastic_add_note`** instead |
 
 ## First run checklist
 

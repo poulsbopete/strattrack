@@ -21,7 +21,7 @@ description: StratTrack team standard — local Elasticsearch via MCP for runnin
 1. **Health** — `elastic_cluster_health`.
 2. **Index** — `elastic_ensure_index` (idempotent) or `./scripts/init-strattrack-index.sh`.
 3. **Ongoing (everyone)** — `elastic_add_note` after meaningful sessions; `elastic_search_opp` / `elastic_get_1_2_3` when the model needs prior context.
-4. **Optional bulk** — `elastic_bulk_import` for up to 100 rows per call when you have batched wing/room/content; prefer **`elastic_add_note`** for routine work. See **`docs/MCP_CLAUDE_DESKTOP.md`**.
+4. **Optional bulk** — `elastic_bulk_import` for up to 100 rows per call when you have batched content to index; prefer **`elastic_add_note`** for routine work. See **`docs/MCP_CLAUDE_DESKTOP.md`**.
 5. **Salesforce** — `elastic_sync_to_sf` is a stub until Phase 3+.
 
 ## Install as a Cursor skill (optional)
