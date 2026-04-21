@@ -191,6 +191,33 @@
     }
     .cta:hover { filter: brightness(1.08); }
     .logo-row { margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      margin-top: 0.55rem;
+    }
+    @media (min-width: 640px) {
+      .compare-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    }
+    .compare-card {
+      padding: 0.6rem 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(22, 27, 34, 0.55);
+      min-width: 0;
+    }
+    .compare-card h3 {
+      margin: 0 0 0.4rem;
+      font-size: clamp(0.88rem, 1.55vw, 1rem);
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .compare-card .pc { font-size: clamp(0.68rem, 1.25vw, 0.78rem); font-weight: 650; text-transform: uppercase; letter-spacing: 0.07em; margin: 0.35rem 0 0.15rem; }
+    .compare-card .pc-pro { color: var(--accent2); }
+    .compare-card .pc-con { color: #f0883e; }
+    .compare-card ul { margin: 0.15rem 0 0; padding-left: 1rem; font-size: clamp(0.76rem, 1.4vw, 0.88rem); line-height: 1.4; }
+    .compare-card li { margin-bottom: 0.28rem; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -380,6 +407,91 @@
         </div>
       </section>
 
+      <section class="slide" aria-label="Local versus shared Elasticsearch">
+        <h2>Local vs shared Elasticsearch</h2>
+        <div class="slide-grid slide-grid--stack-wide">
+          <div class="slide-copy">
+            <p>
+              Same <strong>MCP tools</strong> and index idea—different <strong>where the cluster runs</strong>.
+              Today’s repo defaults to <strong>localhost</strong> for speed, privacy, and completion history on your laptop.
+              A <strong>central org cluster</strong> (Elastic Cloud / Serverless, indices or access rules per team) is the right shape when you want <strong>shared search</strong>, <strong>governed retention</strong>, and <strong>Salesforce-aligned ingest</strong> without everyone operating their own node.
+            </p>
+            <div class="compare-grid">
+              <div class="compare-card">
+                <h3>Local / per-SA (default)</h3>
+                <p class="pc pc-pro">Pros</p>
+                <ul>
+                  <li><strong>Privacy & control</strong>—data stays on the machine you manage.</li>
+                  <li><strong>Fast inner loop</strong>—Docker/Podman + MCP, no org provisioning.</li>
+                  <li><strong>Offline-friendly</strong>—heavy model passes without depending on a shared endpoint.</li>
+                  <li><strong>Token discipline</strong>—retrieve from your index instead of re-pasting long context.</li>
+                </ul>
+                <p class="pc pc-con">Cons</p>
+                <ul>
+                  <li><strong>Not team-visible</strong>—peers don’t inherit your index by default.</li>
+                  <li><strong>You run ops</strong>—backup, upgrade, disk—unless you automate it.</li>
+                  <li><strong>CRM sync</strong> is bring-your-own compared to a managed pipeline.</li>
+                </ul>
+              </div>
+              <div class="compare-card">
+                <h3>Shared org cluster</h3>
+                <p class="pc pc-pro">Pros</p>
+                <ul>
+                  <li><strong>One search surface</strong> for the pod—shared context and coaching.</li>
+                  <li><strong>Platform features</strong>—ILM, snapshots, security/DLS, audit patterns.</li>
+                  <li><strong>Salesforce story</strong>—single place to land ingest/sync jobs the whole team trusts.</li>
+                  <li><strong>Predictable cost</strong> at scale vs <em>N</em> tiny ad-hoc instances.</li>
+                </ul>
+                <p class="pc pc-con">Cons</p>
+                <ul>
+                  <li><strong>Access & residency</strong>—roles, regions, and compliance to design up front.</li>
+                  <li><strong>Dependency</strong>—assistants need network/reachability to the cluster.</li>
+                  <li><strong>Onboarding</strong>—every SA needs credentials/VPC rules, not just <code>localhost</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Comparison: laptop with local Elasticsearch versus cloud shared Elasticsearch with multiple solution architects">
+            <svg viewBox="0 0 400 218" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="cg-cloud" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#30363d"/><stop offset="100%" stop-color="#21262d"/></linearGradient>
+                <marker id="cg-m" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 7 3.5, 0 7" fill="#8b949e"/></marker>
+              </defs>
+              <line x1="200" y1="12" x2="200" y2="200" stroke="#30363d" stroke-width="1" stroke-dasharray="4 4"/>
+              <text x="100" y="14" text-anchor="middle" fill="#58a6ff" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Local / laptop</text>
+              <text x="300" y="14" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Shared / org</text>
+              <rect x="28" y="28" width="108" height="72" rx="8" fill="#161b22" stroke="#484f58"/>
+              <rect x="40" y="40" width="84" height="48" rx="4" fill="#0d1117" stroke="#30363d"/>
+              <rect x="52" y="94" width="60" height="6" rx="2" fill="#30363d"/>
+              <ellipse cx="82" cy="108" rx="34" ry="5" fill="#21262d"/>
+              <rect x="118" y="52" width="44" height="40" rx="20" fill="#21262d" stroke="#58a6ff" stroke-width="1.4"/>
+              <text x="140" y="76" text-anchor="middle" fill="#58a6ff" font-size="9" font-weight="600" font-family="system-ui,sans-serif">ES</text>
+              <path d="M108 68 L118 68" stroke="#58a6ff" stroke-width="1.2" marker-end="url(#cg-m)"/>
+              <rect x="38" y="118" width="124" height="26" rx="6" fill="#161b22" stroke="#3fb950" stroke-width="1.2"/>
+              <text x="100" y="135" text-anchor="middle" fill="#3fb950" font-size="8" font-weight="600" font-family="system-ui,sans-serif">Claude · MCP → localhost:9200</text>
+              <text x="100" y="156" text-anchor="middle" fill="#6e7681" font-size="7" font-family="system-ui,sans-serif">POC · private notes · offline passes</text>
+              <path d="M100 168 L100 188 L198 188" stroke="#484f58" stroke-width="1" fill="none" marker-end="url(#cg-m)" opacity="0.7"/>
+              <text x="148" y="184" text-anchor="middle" fill="#8b949e" font-size="7">same tools, different URL</text>
+              <ellipse cx="300" cy="48" rx="52" ry="22" fill="url(#cg-cloud)" stroke="#484f58"/>
+              <text x="300" y="44" text-anchor="middle" fill="#8b949e" font-size="7" font-family="system-ui,sans-serif">Elastic Cloud</text>
+              <text x="300" y="54" text-anchor="middle" fill="#c9d1d9" font-size="8" font-weight="600" font-family="system-ui,sans-serif">org project</text>
+              <rect x="268" y="78" width="64" height="44" rx="22" fill="#21262d" stroke="#3fb950" stroke-width="1.4"/>
+              <text x="300" y="104" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="600" font-family="system-ui,sans-serif">ES</text>
+              <circle cx="248" cy="138" r="7" fill="#21262d" stroke="#8b949e"/><text x="248" y="141" text-anchor="middle" fill="#8b949e" font-size="6">SA</text>
+              <circle cx="300" cy="148" r="7" fill="#21262d" stroke="#8b949e"/><text x="300" y="151" text-anchor="middle" fill="#8b949e" font-size="6">SA</text>
+              <circle cx="352" cy="138" r="7" fill="#21262d" stroke="#8b949e"/><text x="352" y="141" text-anchor="middle" fill="#8b949e" font-size="6">SA</text>
+              <path d="M248 128 L285 100" stroke="#8b949e" stroke-width="0.9" opacity="0.85"/>
+              <path d="M300 134 L300 122" stroke="#8b949e" stroke-width="0.9" opacity="0.85"/>
+              <path d="M352 128 L315 100" stroke="#8b949e" stroke-width="0.9" opacity="0.85"/>
+              <rect x="218" y="162" width="164" height="28" rx="6" fill="#161b22" stroke="#a371f7" stroke-width="1.1"/>
+              <text x="300" y="180" text-anchor="middle" fill="#c9d1d9" font-size="8" font-family="system-ui,sans-serif">Salesforce ingest · ILM · RBAC</text>
+              <text x="300" y="210" text-anchor="middle" fill="#6e7681" font-size="8" font-family="system-ui,sans-serif">pick one topology per phase—not a forever religious split</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> laptop loop vs team hub. <strong>Why:</strong> answer “shared Elastic?” without pretending they’re mutually exclusive.</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section class="slide" aria-label="AI timely">
         <h2>AI that stays on time—not just on brand</h2>
         <div class="slide-grid figure-first">
@@ -507,7 +619,7 @@
 
   <div class="footer-bar">
     <div class="dots" id="dots" aria-hidden="true"></div>
-    <span><span class="keys">← → or swipe · </span><span id="counter">1 / 9</span></span>
+    <span><span class="keys">← → or swipe · </span><span id="counter">1 / 10</span></span>
   </div>
 
   <script>
