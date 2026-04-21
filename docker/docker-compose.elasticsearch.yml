@@ -3,6 +3,7 @@
 # Podman: same script (auto-detect) or STRATTRACK_CONTAINER_RUNTIME=podman
 #
 # Podman rootless + mlock errors: merge podman-compat file (see script --podman-compat).
+# Access (no auth while security is off): docs/ELASTICSEARCH_LOCAL_ACCESS.md
 
 name: strattrack
 

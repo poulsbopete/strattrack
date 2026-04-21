@@ -85,6 +85,8 @@ STRATTRACK_CONTAINER_RUNTIME=docker ./scripts/build-elastic-docker.sh
 
 Compose files: `docker/docker-compose.elasticsearch.yml` (single-node, security off for local dev). Optional merge: `docker/docker-compose.elasticsearch.podman-compat.yml`.
 
+**Access / “login”:** default image has **no password** — open **[http://localhost:9200](http://localhost:9200)** or use `curl`. Shell into the container, optional Kibana/security: **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)**.
+
 **Stop** (use the same `-f` list you used to start, including `podman-compat` if applicable):
 
 ```bash
