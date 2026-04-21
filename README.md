@@ -43,6 +43,22 @@ These are the **platform and access** expectations for the end-to-end workflow (
 | **External AI policy** | Clarify whether note content may be processed by **third-party** model APIs or must stay in **Google-only** (or other) tooling. |
 | **No secrets in git** | API keys and OAuth live in env or secret stores — not committed to this repo. |
 
+## MCP (Claude Desktop) + MemPalace migration
+
+StratTrack includes a **stdio MCP server** that talks to local Elasticsearch (`mcp/strattrack-mcp.mjs`).
+
+| Doc | Purpose |
+|-----|---------|
+| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Claude Desktop config, env vars, tool list |
+| **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** | Moving [MemPalace](https://github.com/MemPalace/mempalace) wings/rooms/drawers into ES via `elastic_bulk_import_mempalace` |
+| **[skills/strattrack-elasticsearch-mcp/SKILL.md](skills/strattrack-elasticsearch-mcp/SKILL.md)** | Cursor / agent skill (copy to `~/.cursor/skills-cursor/` if desired) |
+
+```bash
+cd mcp && npm install && node strattrack-mcp.mjs
+```
+
+`npm install` adds **`@modelcontextprotocol/sdk`** and **`zod`** (required for MCP tool schemas). No Elasticsearch Node client — uses **`fetch`** to the HTTP API.
+
 ## Local Elasticsearch (Docker or Podman)
 
 From the repo root:
