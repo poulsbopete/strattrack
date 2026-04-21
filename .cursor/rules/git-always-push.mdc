@@ -1,0 +1,6 @@
+---
+description: Push completed work to Git remote
+alwaysApply: true
+---
+
+When a task that changes the repository is **complete** (commits are ready), **always run `git push`** to `origin` for the current branch—do not stop after `git commit` only. If push fails (auth, network), report the error and what remains to do.

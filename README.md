@@ -63,12 +63,16 @@ See **[docs/PHASE2_PLAN.md](docs/PHASE2_PLAN.md)** for:
 
 ## Git workflow
 
+**Convention:** When a change set is complete, **always push to `origin`** (not only local commit). Feature branches: `git push -u origin <branch>`; `main`: `git push origin main` after merge or direct commits.
+
 ```bash
 git checkout -b feature/your-feature
 # ... changes ...
 git add .
 git commit -m "feat: concise description"
 git push -u origin feature/your-feature
+# finishing on main:
+git push origin main
 ```
 
 ## License
