@@ -6,6 +6,43 @@ Production-oriented successor to mempalace: **Elasticsearch semantic search**, *
 
 **Remote:** `git@github.com:poulsbopete/strattrack.git`
 
+## Requirements
+
+These are the **platform and access** expectations for the end-to-end workflow (meeting capture → shared visibility → AI assistance → Salesforce → follow-ups). Details and IT copy-paste language: **[docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md)**.
+
+### Meeting notes and leadership visibility
+
+| Requirement | Purpose |
+|---------------|---------|
+| **Granola** (or org-approved equivalent) | Capture meeting notes and transcripts/summaries per your policy. |
+| **Google Drive** — write access to a **Shared Drive** (team-owned) folder | Save notes so **managers can read** the same corpus (not only “My Drive” shared ad hoc). |
+| **Automation into Drive** (often required) | Granola may need an **approved connector** (e.g. Zapier/Make) or export path so notes land in that folder **reliably**, not only manual export. |
+| **Naming / metadata discipline** | Filenames or headers include **account / opportunity hints** so downstream matching to Salesforce is tractable. |
+
+### Claude Desktop, Salesforce, and follow-ups
+
+| Requirement | Purpose |
+|---------------|---------|
+| **Claude Desktop** (or org-approved assistant) | Interactive analysis over notes and CRM context; may use **MCP** or attachments per your setup. |
+| **Salesforce (SFDC)** access for SAs | **Read** Opportunities (and related Account context); **append or update** the agreed **SA notes** location (field, Chatter, or custom object — **Sales Ops** defines the source of truth). |
+| **Google Calendar** (or **SFDC Tasks**, if that is the team standard) | Create **reach-out / follow-up reminders** tied to customers or opportunities. |
+| **APIs and admin consent** (typical IT checklist) | As needed: **Google Drive API** (list/read folder for automation), **Google Calendar API** (create events), **Salesforce API** (connected app / integration user with **minimal** scopes). |
+
+### StratTrack runtime (this repository)
+
+| Requirement | Purpose |
+|---------------|---------|
+| **Docker** or **Podman** | Run local **Elasticsearch** for search / MCP tooling (see below). |
+| **Elasticsearch** | Semantic search over opportunities and notes (`elastic_*` MCP tools when `mcp_server.js` is present). |
+
+### Security and compliance (do not skip)
+
+| Requirement | Purpose |
+|---------------|---------|
+| **Data classification** for transcripts in Drive | Legal / InfoSec may require summary-only, retention, or customer-specific rules. |
+| **External AI policy** | Clarify whether note content may be processed by **third-party** model APIs or must stay in **Google-only** (or other) tooling. |
+| **No secrets in git** | API keys and OAuth live in env or secret stores — not committed to this repo. |
+
 ## Local Elasticsearch (Docker or Podman)
 
 From the repo root:
