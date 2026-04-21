@@ -1,11 +1,13 @@
 # Claude Desktop & Cursor — StratTrack Elasticsearch MCP
 
+**Team default:** **Claude Desktop 4** (`.mcpb` or `mcpServers`). Cursor is supported for developers who use it; see **Cursor (this repo)** below.
+
 ## Team model (default)
 
 StratTrack is:
 
 1. **Local Elasticsearch** (Docker/Podman) + index `strattrack_drawers`.
-2. This **MCP server** wired in Cursor or Claude Desktop.
+2. This **MCP server** wired in **Claude Desktop** (primary) or **Cursor** (optional).
 3. Ongoing work: call **`elastic_add_note`** to append notes/decisions (running history for completions), **`elastic_search_opp`** to retrieve context, **`elastic_get_1_2_3`** for weekly-style summaries.
 
 That gives the team **searchable, durable memory** in a **shared, MCP-addressable** index.
@@ -15,14 +17,14 @@ That gives the team **searchable, durable memory** in a **shared, MCP-addressabl
 **No.** If you ran `node strattrack-mcp.mjs` in a terminal and saw `[strattrack-mcp] connected …`, the server **started correctly**. It will **not exit** on its own: stdio MCP servers **block** and wait for the client (Claude Desktop or Cursor) to send JSON-RPC on stdin. That is normal.
 
 - **Stop the manual run:** press `Ctrl+C` when you are done sanity-checking.
-- **To actually test tools:** add the MCP to **Claude Desktop** or **Cursor** (below) so the app **spawns** its own `node …strattrack-mcp.mjs` process. You usually **do not** run the server by hand at the same time (two processes would fight if both used stdio — here only the IDE’s child process should run the MCP).
+- **To actually test tools:** add the MCP to **Claude Desktop** (usual) or **Cursor** (below) so the app **spawns** its own `node …strattrack-mcp.mjs` process. You usually **do not** run the server by hand at the same time (two processes would fight if both used stdio — here only the client’s child process should run the MCP).
 
 ## “Always on” — what should run 24/7?
 
 | Layer | Always-on? | Why |
 |-------|------------|-----|
 | **Elasticsearch (Docker/Podman)** | **Yes (recommended)** | Holds your index and answers `http://localhost:9200` whenever tools run. Compose uses **`restart: unless-stopped`** so the container comes back after reboot until you `down` it. |
-| **MCP Node process (`strattrack-mcp.mjs`)** | **No (stdio design)** | This server speaks **MCP over stdin/stdout**. It is meant to be **started by Cursor or Claude Desktop** when a chat needs tools, then stopped when the session ends. Leaving a manual `node strattrack-mcp.mjs` in a terminal does **not** help the IDE (different process, no stdin pipe). |
+| **MCP Node process (`strattrack-mcp.mjs`)** | **No (stdio design)** | This server speaks **MCP over stdin/stdout**. It is meant to be **started by Claude Desktop or Cursor** when a chat needs tools, then stopped when the session ends. Leaving a manual `node strattrack-mcp.mjs` in a terminal does **not** help the app (different process, no stdin pipe). |
 | **Future: HTTP MCP** | Possible | A long‑lived **network** MCP server is a separate mode (not implemented here). If you need that later, it would be a small HTTP service + client config change. |
 
 So: keep **Elasticsearch** running all the time; let the **IDE** launch the **MCP** when needed.

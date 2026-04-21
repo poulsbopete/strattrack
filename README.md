@@ -17,7 +17,7 @@ Elasticsearch-backed notes and search for **Solution Architects**, with **Salesf
 | 1. Elasticsearch | `./scripts/build-elastic-docker.sh` |
 | 2. Create index | `./scripts/init-strattrack-index.sh` |
 | 3. MCP deps | `cd mcp && npm install` |
-| 4. Wire Cursor / Claude | **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** (copy **`.cursor/mcp.json.example`**) |
+| 4. Claude Desktop 4 (primary) | **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** — `.mcpb` or manual `mcpServers`. *Cursor:* copy **`.cursor/mcp.json.example`** |
 
 More: **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)** (curl, container shell), **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** (secrets), **[docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md)** (Drive / SFDC / IT brief).
 
