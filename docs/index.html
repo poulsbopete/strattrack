@@ -16,6 +16,9 @@
       --border: #30363d;
       --ink: #c9d1d9;
       --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+      /* Width of next slide visible at right edge (one “main” slide + peek) */
+      --carousel-peek: clamp(2rem, 6vw, 4rem);
+      --slide-index: 0;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; margin: 0; font-family: var(--font); background: var(--bg); color: var(--text); }
@@ -31,10 +34,12 @@
       height: 100%;
       width: max-content;
       transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transform: translateX(calc(var(--slide-index) * -1 * (100vw - var(--carousel-peek))));
+      will-change: transform;
     }
     .slide {
-      flex: 0 0 100vw;
-      width: 100vw;
+      flex: 0 0 calc(100vw - var(--carousel-peek));
+      width: calc(100vw - var(--carousel-peek));
       min-width: 0;
       height: 100%;
       padding: clamp(1rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem) 3.25rem;
@@ -513,7 +518,7 @@
       }
 
       function paint() {
-        slides.style.transform = "translateX(" + -index * 100 + "vw)";
+        slides.style.setProperty("--slide-index", String(index));
         counter.textContent = index + 1 + " / " + total;
         var buttons = dots.querySelectorAll("button");
         for (var k = 0; k < buttons.length; k++) {
