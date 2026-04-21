@@ -82,6 +82,10 @@ Manifest source: **`extensions/strattrack-elasticsearch/manifest.json`**.
 
 ## Claude Desktop — manual `mcpServers` entry
 
+**Do not duplicate StratTrack.** If you already installed the **`.mcpb` extension**, Claude shows a server **“managed by an extension”** — then **omit** any manual `strattrack-elasticsearch` entry in `claude_desktop_config.json`. Two entries = two sidecar processes, confusing UI, and harder debugging.
+
+Use **either** the extension **or** the snippet below — not both.
+
 Edit your Claude Desktop MCP configuration and add a server entry (paths must be **absolute** on your Mac):
 
 ```json
@@ -109,7 +113,7 @@ Replace `/Users/YOU/opt/strattrack` with your clone path. Restart Claude Desktop
 2. **Minimal fix:** merge in only the `mcpServers` object from **[examples/claude_desktop_mcp.strattrack.json](../examples/claude_desktop_mcp.strattrack.json)** (fix the `args` path first), or copy the `mcpServers` block from the snippet above into your existing file next to `preferences`.
 3. **Quit Claude fully** (macOS **Cmd+Q**), reopen, then start a **new chat** to load MCP.
 
-If you use the **`.mcpb` extension** instead of `mcpServers`, you can omit the manual block — but a bad edit often deletes `mcpServers` or corrupts the whole file; restoring valid `preferences` + optional `mcpServers` fixes startup.
+If you use the **`.mcpb` extension**, keep **`mcpServers` free of StratTrack** (or remove only that key) so you do not register the same tools twice. A bad edit often deletes `mcpServers` or corrupts the whole file — validate JSON and restore **`preferences`** at minimum; add **`mcpServers`** only when you are **not** using the StratTrack extension.
 
 ## Cursor (this repo)
 
