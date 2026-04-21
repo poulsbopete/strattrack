@@ -14,6 +14,8 @@ npm-debug.log*
 # IDE
 .idea/
 .vscode/
+# Cursor MCP — copy .cursor/mcp.json.example to .cursor/mcp.json locally
+.cursor/mcp.json
 *.swp
 *.swo
 

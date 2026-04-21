@@ -1,4 +1,11 @@
-# Claude Desktop — StratTrack Elasticsearch MCP
+# Claude Desktop & Cursor — StratTrack Elasticsearch MCP
+
+## Do you need to wait for the terminal?
+
+**No.** If you ran `node strattrack-mcp.mjs` in a terminal and saw `[strattrack-mcp] connected …`, the server **started correctly**. It will **not exit** on its own: stdio MCP servers **block** and wait for the client (Claude Desktop or Cursor) to send JSON-RPC on stdin. That is normal.
+
+- **Stop the manual run:** press `Ctrl+C` when you are done sanity-checking.
+- **To actually test tools:** add the MCP to **Claude Desktop** or **Cursor** (below) so the app **spawns** its own `node …strattrack-mcp.mjs` process. You usually **do not** run the server by hand at the same time (two processes would fight if both used stdio — here only the IDE’s child process should run the MCP).
 
 ## Prerequisites
 
@@ -41,6 +48,15 @@ Edit your Claude Desktop MCP configuration and add a server entry (paths must be
 Replace `/Users/YOU/opt/strattrack` with your clone path. Restart Claude Desktop after saving.
 
 **With Keychain:** set `"command"` to `/Users/YOU/opt/strattrack/scripts/run-strattrack-mcp-from-keychain.sh` and `"args": []` — see [MACOS_KEYCHAIN.md](./MACOS_KEYCHAIN.md).
+
+## Cursor (this repo)
+
+1. Copy **`.cursor/mcp.json.example`** to **`.cursor/mcp.json`** in the repo root (create the folder if needed).
+2. Replace `/ABSOLUTE/PATH/TO/strattrack` in `args` with your real path (e.g. `/Users/psimkins/opt/strattrack`).
+3. Open **Cursor Settings → MCP** (or the MCP panel) and ensure the server is enabled; restart Cursor if it does not pick up the file.
+4. In chat, use **Agent** mode if your product requires it for tool use, then try a prompt that calls `elastic_cluster_health`.
+
+Keep **Elasticsearch running** (`./scripts/build-elastic-docker.sh`) while you test.
 
 ## Tools exposed
 

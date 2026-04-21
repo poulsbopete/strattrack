@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "strattrack-elasticsearch": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/strattrack/mcp/strattrack-mcp.mjs"],
+      "env": {
+        "ELASTICSEARCH_URL": "http://localhost:9200",
+        "STRATTRACK_INDEX": "strattrack_drawers"
+      }
+    }
+  }
+}

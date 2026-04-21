@@ -49,7 +49,8 @@ StratTrack includes a **stdio MCP server** that talks to local Elasticsearch (`m
 
 | Doc | Purpose |
 |-----|---------|
-| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Claude Desktop config, env vars, tool list |
+| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Claude Desktop **and Cursor** MCP config, env vars, tool list (terminal `node strattrack-mcp.mjs` only sanity-checks — use IDE MCP to test tools) |
+| **`.cursor/mcp.json.example`** | Copy to `.cursor/mcp.json`, set absolute path to `strattrack-mcp.mjs` |
 | **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** | Store API keys in **Apple Keychain**; wrapper script for MCP |
 | **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** | Moving [MemPalace](https://github.com/MemPalace/mempalace) wings/rooms/drawers into ES via `elastic_bulk_import_mempalace` |
 | **[skills/strattrack-elasticsearch-mcp/SKILL.md](skills/strattrack-elasticsearch-mcp/SKILL.md)** | Cursor / agent skill (copy to `~/.cursor/skills-cursor/` if desired) |
