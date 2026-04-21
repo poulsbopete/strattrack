@@ -103,6 +103,14 @@ Replace `/Users/YOU/opt/strattrack` with your clone path. Restart Claude Desktop
 
 **With Keychain:** set `"command"` to `/Users/YOU/opt/strattrack/scripts/run-strattrack-mcp-from-keychain.sh` and `"args": []` — see [MACOS_KEYCHAIN.md](./MACOS_KEYCHAIN.md).
 
+### If Claude Desktop won’t start (broken JSON or missing MCP)
+
+1. **Validate JSON:** the file must be valid JSON — no trailing commas, no comments. Use your editor or `python3 -m json.tool ~/Library/Application\ Support/Claude/claude_desktop_config.json`.
+2. **Minimal fix:** merge in only the `mcpServers` object from **[examples/claude_desktop_mcp.strattrack.json](../examples/claude_desktop_mcp.strattrack.json)** (fix the `args` path first), or copy the `mcpServers` block from the snippet above into your existing file next to `preferences`.
+3. **Quit Claude fully** (macOS **Cmd+Q**), reopen, then start a **new chat** to load MCP.
+
+If you use the **`.mcpb` extension** instead of `mcpServers`, you can omit the manual block — but a bad edit often deletes `mcpServers` or corrupts the whole file; restoring valid `preferences` + optional `mcpServers` fixes startup.
+
 ## Cursor (this repo)
 
 1. Copy **`.cursor/mcp.json.example`** to **`.cursor/mcp.json`** in the repo root (create the folder if needed).
