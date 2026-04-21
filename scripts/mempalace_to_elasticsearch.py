@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-Copy Chroma-backed drawers from a local palace directory into StratTrack Elasticsearch (strattrack_drawers).
+One-time import: read Chroma-backed drawers from a legacy MemPalace palace directory
+into StratTrack Elasticsearch (strattrack_drawers). Use this when replacing MemPalace
+with StratTrack, not as an ongoing dual-write path.
 
 Requires: pip install -r scripts/requirements-mempalace-migrate.txt
            Local Elasticsearch running (./scripts/build-elastic-docker.sh)
@@ -179,7 +181,7 @@ def _bulk_post(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Migrate Chroma drawers from a palace directory into StratTrack Elasticsearch."
+        description="One-time import of Chroma drawers (legacy MemPalace) into StratTrack Elasticsearch."
     )
     parser.add_argument(
         "--palace",
