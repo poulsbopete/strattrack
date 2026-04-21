@@ -16,6 +16,10 @@ Production-oriented successor to mempalace: **Elasticsearch semantic search**, *
 
 > **Note:** This checkout may contain planning docs only until the application tree (`mcp_server.js`, Docker assets, etc.) is copied or pushed from your primary development machine.
 
+## Manager / IT brief (Granola → Drive → SFDC)
+
+**[docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md)** — Shared Drive, Salesforce, Calendar, and how Claude Desktop fits; includes a copy-paste paragraph for leadership.
+
 ## Phase 2
 
 See **[docs/PHASE2_PLAN.md](docs/PHASE2_PLAN.md)** for:
