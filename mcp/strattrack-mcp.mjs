@@ -81,10 +81,10 @@ const server = new McpServer(
   { name: "strattrack-elasticsearch", version: "0.1.0" },
   {
     instructions: [
-      "StratTrack MCP backs onto a local Elasticsearch (default http://localhost:9200, index strattrack_drawers).",
-      "After starting Docker/Podman ES, call elastic_ensure_index once before bulk import or heavy use.",
-      "MemPalace uses wings/rooms/drawers; this index stores wing, room, content, and optional mempalace_drawer_id for idempotent migration.",
-      "Prefer elastic_bulk_import_mempalace for batches (max 100 lines per call); repeat until the export is fully ingested.",
+      "StratTrack MCP uses local Elasticsearch (default http://localhost:9200, index strattrack_drawers).",
+      "Team workflow: use elastic_add_note to append running history for completions; elastic_search_opp and elastic_get_1_2_3 to retrieve and summarize indexed context.",
+      "After starting Docker/Podman ES, call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing.",
+      "elastic_bulk_import_mempalace is optional: batched wing/room-shaped imports (e.g. one maintainer migrating a personal MemPalace export); max 100 items per call.",
     ].join(" "),
   }
 );
@@ -129,7 +129,7 @@ server.registerTool(
   "elastic_search_opp",
   {
     description:
-      "Semantic-ish search: multi_match on content, opportunity, and title. Optional filters: account, stage, wing, room. Replaces MemPalace scoped search for StratTrack.",
+      "Search indexed notes and history: multi_match on content, opportunity, and title. Optional filters: account, stage, wing, room. Use after elastic_add_note (or bulk import) to pull context into completions.",
     inputSchema: z.object({
       query: z.string().min(1).describe("Search text"),
       account_filter: z.string().optional().describe("Exact account keyword filter"),
@@ -206,7 +206,7 @@ server.registerTool(
   "elastic_add_note",
   {
     description:
-      "Index a note or drawer document (Solution Architect note, MemPalace drawer, etc.). Optional mempalace_drawer_id sets _id for idempotent upserts.",
+      "Primary tool for ongoing history: index a note or decision (Solution Architect context, meeting takeaway, etc.). Same index powers search and 1-2-3. Optional mempalace_drawer_id sets _id for idempotent upserts (e.g. personal MemPalace migration).",
     inputSchema: z.object({
       content: z.string().min(1),
       title: z.string().optional(),
@@ -337,7 +337,7 @@ server.registerTool(
   "elastic_bulk_import_mempalace",
   {
     description:
-      "Bulk index up to 100 MemPalace-style rows (wing/room/content/…) into Elasticsearch. Use the same mempalace_drawer_id across runs for upserts. Split large exports into multiple calls.",
+      "Optional bulk import: up to 100 rows with wing/room/content (MemPalace-shaped or any batched drawers). For team day-to-day use elastic_add_note instead. Use stable mempalace_drawer_id per row for upserts; split large exports into multiple calls.",
     inputSchema: z.object({
       items: z.array(mempalaceItem).min(1).max(100),
       source: z.string().optional().default("mempalace_migration"),

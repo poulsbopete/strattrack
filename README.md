@@ -1,6 +1,8 @@
 # StratTrack
 
-Production-oriented successor to mempalace: **Elasticsearch semantic search**, **Salesforce alignment**, and **team-scale** visibility for Solution Architect workflows.
+**Elasticsearch** semantic search, **Salesforce alignment**, and **team-scale** visibility for Solution Architect workflows.
+
+**Team standard:** use the **StratTrack Elasticsearch MCP** (`elastic_*` tools) so assistants can **search**, **append notes** (`elastic_add_note`), and keep a **running indexed history** in the shared index — the supported replacement for ad-hoc “memory” in completions. **MemPalace** is an optional **personal** import path for one maintainer who already used it; other users do **not** install MemPalace (see **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** only for that one-off migration).
 
 ## Repository
 
@@ -33,7 +35,8 @@ These are the **platform and access** expectations for the end-to-end workflow (
 | Requirement | Purpose |
 |---------------|---------|
 | **Docker** or **Podman** | Run local **Elasticsearch** for search / MCP tooling (see below). |
-| **Elasticsearch** | Semantic search over opportunities and notes (`elastic_*` MCP tools when `mcp_server.js` is present). |
+| **Elasticsearch** | Durable store for notes and retrieval; exposed to assistants via **`mcp/strattrack-mcp.mjs`** (`elastic_*` tools). |
+| **MCP client (Cursor / Claude Desktop)** | Wire **`strattrack-elasticsearch`** so completions can call **`elastic_add_note`** (append history) and **`elastic_search_opp`** / **`elastic_get_1_2_3`** (read context). |
 
 ### Security and compliance (do not skip)
 
@@ -43,16 +46,16 @@ These are the **platform and access** expectations for the end-to-end workflow (
 | **External AI policy** | Clarify whether note content may be processed by **third-party** model APIs or must stay in **Google-only** (or other) tooling. |
 | **No secrets in git** | API keys and OAuth live in env or secret stores — not committed to this repo. On Mac, prefer **Keychain** + **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** and `scripts/run-strattrack-mcp-from-keychain.sh` for the MCP server. |
 
-## MCP (Claude Desktop) + MemPalace migration
+## MCP (team: running history & completions)
 
-StratTrack includes a **stdio MCP server** that talks to local Elasticsearch (`mcp/strattrack-mcp.mjs`).
+StratTrack’s **stdio MCP server** (`mcp/strattrack-mcp.mjs`) is how **every user** should connect assistants to Elasticsearch: **append** context with `elastic_add_note`, **retrieve** it with `elastic_search_opp`, and draft updates with `elastic_get_1_2_3`. That replaces the *role* of personal MemPalace for the team — **without** requiring MemPalace on anyone’s machine.
 
 | Doc | Purpose |
 |-----|---------|
-| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Claude Desktop **and Cursor** MCP config, env vars, tool list (terminal `node strattrack-mcp.mjs` only sanity-checks — use IDE MCP to test tools) |
+| **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Cursor / Claude Desktop MCP config, env vars, tool list |
 | **`.cursor/mcp.json.example`** | Copy to `.cursor/mcp.json`, set absolute path to `strattrack-mcp.mjs` |
-| **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** | Store API keys in **Apple Keychain**; wrapper script for MCP |
-| **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** | Moving [MemPalace](https://github.com/MemPalace/mempalace) wings/rooms/drawers into ES via `elastic_bulk_import_mempalace` |
+| **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** | Optional: API keys in **Apple Keychain** + wrapper script |
+| **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** | **Optional, personal only:** one-time import from [MemPalace](https://github.com/MemPalace/mempalace) via `elastic_bulk_import_mempalace` |
 | **[skills/strattrack-elasticsearch-mcp/SKILL.md](skills/strattrack-elasticsearch-mcp/SKILL.md)** | Cursor / agent skill (copy to `~/.cursor/skills-cursor/` if desired) |
 
 ```bash

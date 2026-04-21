@@ -1,15 +1,15 @@
 ---
 name: strattrack-elasticsearch-mcp
-description: Use StratTrack local Elasticsearch via MCP (MemPalace replacement). Start ES with Docker/Podman, wire Claude Desktop to strattrack-mcp, ensure index, migrate MemPalace drawers in batches, then search and 1-2-3 tools.
+description: StratTrack team standard — local Elasticsearch via MCP for running history and completions (elastic_add_note, elastic_search_opp, elastic_get_1_2_3). MemPalace is optional personal import only; wire Cursor/Claude to strattrack-mcp.mjs.
 ---
 
 # StratTrack Elasticsearch MCP
 
 ## When to use
 
-- Working in **StratTrack** with **local Elasticsearch** (Docker or Podman).
-- Replacing or complementing **[MemPalace](https://github.com/MemPalace/mempalace)** with ES-backed search and notes.
-- Configuring **Claude Desktop** (or any MCP client) to call `elastic_*` tools.
+- **Default for all users:** StratTrack + **local Elasticsearch** (Docker/Podman) + MCP for **durable, searchable** context and **running history** in completions.
+- **Not** “everyone migrates MemPalace” — MemPalace is **optional** for **one** maintainer who already used it; see **`docs/MEMPALACE_MIGRATION.md`**.
+- Configuring **Cursor** or **Claude Desktop** to call `elastic_*` tools.
 
 ## Prerequisites
 
@@ -20,9 +20,9 @@ description: Use StratTrack local Elasticsearch via MCP (MemPalace replacement).
 ## Workflow
 
 1. **Health** — `elastic_cluster_health`.
-2. **Index** — `elastic_ensure_index` (idempotent).
-3. **MemPalace migration** — reshape exports into `items` for `elastic_bulk_import_mempalace` (max 100 per call). See **`docs/MEMPALACE_MIGRATION.md`**.
-4. **Daily use** — `elastic_add_note`, `elastic_search_opp`, `elastic_get_1_2_3`.
+2. **Index** — `elastic_ensure_index` (idempotent) or `./scripts/init-strattrack-index.sh`.
+3. **Ongoing (everyone)** — `elastic_add_note` after meaningful sessions; `elastic_search_opp` / `elastic_get_1_2_3` when the model needs prior context.
+4. **Optional (one maintainer)** — MemPalace bulk import via `elastic_bulk_import_mempalace`. See **`docs/MEMPALACE_MIGRATION.md`**.
 5. **Salesforce** — `elastic_sync_to_sf` is a stub until Phase 3+.
 
 ## Install as a Cursor skill (optional)

@@ -1,8 +1,10 @@
-# MemPalace → StratTrack (Elasticsearch)
+# MemPalace → StratTrack (optional, personal import)
 
-[MemPalace](https://github.com/MemPalace/mempalace) models memory as **wings**, **rooms**, and **drawers** (verbatim content). StratTrack stores the same logical units in Elasticsearch as documents so you can **search**, **filter**, and later tie rows to **Salesforce** fields.
+> **Audience:** the **one maintainer** who already used [MemPalace](https://github.com/MemPalace/mempalace). **All other Solution Architects** should **not** install MemPalace. Their supported workflow is: **StratTrack Elasticsearch MCP** + **`elastic_add_note`** / **`elastic_search_opp`** / **`elastic_get_1_2_3`** for running history and completions — see **[MCP_CLAUDE_DESKTOP.md](./MCP_CLAUDE_DESKTOP.md)**.
 
-This repo does **not** embed the MemPalace Python package. You export or extract drawers, then ingest with the MCP tool **`elastic_bulk_import_mempalace`**.
+MemPalace models memory as **wings**, **rooms**, and **drawers** (verbatim content). If you are migrating *your* palace, StratTrack stores those shapes in Elasticsearch so you can **search**, **filter**, and align with **Salesforce** fields like everyone else.
+
+This repo does **not** embed the MemPalace Python package. You export or extract drawers yourself, then ingest with the MCP tool **`elastic_bulk_import_mempalace`** (same JSON shape can be used for any wing/room–style bulk load, not only MemPalace).
 
 ## Target document shape
 
@@ -56,11 +58,13 @@ MemPalace ships an MCP server with many tools (list wings/rooms, search, add dra
 3. **CSV / JSON export**  
    If you already have MemPalace’s historical CSV export (see MemPalace docs), map columns to `wing`, `room`, `content`, `title`, and a generated or stored drawer id column.
 
-## After migration
+## After your import (if you ran one)
 
-- Use **`elastic_search_opp`** for blocker- and account-aware search.
-- Use **`elastic_add_note`** for new Solution Architect notes (same index).
-- Revisit **[PHASE2_PLAN.md](./PHASE2_PLAN.md)** for ranking and auto-tagging improvements.
+You converge on the **same team workflow** as everyone else:
+
+- **`elastic_add_note`** for new notes and running history.
+- **`elastic_search_opp`** / **`elastic_get_1_2_3`** for retrieval and summaries.
+- **[PHASE2_PLAN.md](./PHASE2_PLAN.md)** for ranking and auto-tagging improvements.
 
 ## References
 
