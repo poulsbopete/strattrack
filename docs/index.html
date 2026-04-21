@@ -24,24 +24,27 @@
       height: 100vh;
       overflow: hidden;
       position: relative;
+      width: 100%;
     }
     .slides {
       display: flex;
       height: 100%;
+      width: max-content;
       transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
     .slide {
-      flex: 0 0 100%;
-      width: 100%;
+      flex: 0 0 100vw;
+      width: 100vw;
+      min-width: 0;
       height: 100%;
       padding: clamp(1rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem) 3.25rem;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      max-width: 56rem;
-      margin: 0 auto;
+      box-sizing: border-box;
       border-left: 3px solid var(--accent);
       background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+      overflow-x: hidden;
       overflow-y: auto;
     }
     .slide-grid {
@@ -50,21 +53,46 @@
       align-items: start;
       flex: 1;
       min-height: 0;
+      min-width: 0;
+      width: 100%;
       grid-template-columns: 1fr;
     }
-    @media (min-width: 900px) {
-      .slide-grid { grid-template-columns: 1fr minmax(260px, 38%); align-items: center; }
-      .slide-grid.figure-first { grid-template-columns: minmax(260px, 38%) 1fr; }
+    @media (min-width: 960px) {
+      .slide-grid:not(.slide-grid--stack-wide) {
+        grid-template-columns: minmax(0, 1fr) minmax(220px, min(36vw, 340px));
+        align-items: center;
+      }
+      .slide-grid.figure-first:not(.slide-grid--stack-wide) {
+        grid-template-columns: minmax(220px, min(36vw, 340px)) minmax(0, 1fr);
+      }
       .slide-grid.figure-first .slide-copy { order: 2; }
       .slide-grid.figure-first .slide-figure { order: 1; }
     }
-    .slide-copy { min-width: 0; }
+    @media (min-width: 1100px) {
+      .slide-grid.slide-grid--stack-wide {
+        grid-template-columns: minmax(0, 1fr) minmax(220px, min(34vw, 320px));
+        align-items: center;
+      }
+    }
+    .slide-copy {
+      min-width: 0;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .slide code {
+      overflow-wrap: anywhere;
+      word-break: break-all;
+      font-size: 0.88em;
+    }
     .slide-figure {
       margin: 0;
       padding: 0.75rem;
       background: rgba(22, 27, 34, 0.85);
       border: 1px solid var(--border);
       border-radius: 10px;
+      min-width: 0;
+      max-width: 100%;
     }
     .slide-figure svg {
       width: 100%;
@@ -97,7 +125,7 @@
       font-size: clamp(0.92rem, 1.85vw, 1.1rem);
       line-height: 1.5;
       color: var(--muted);
-      max-width: 40rem;
+      max-width: 100%;
     }
     .slide ul, .slide ol { margin: 0.35rem 0 0; padding-left: 1.15rem; }
     .slide li { margin-bottom: 0.4rem; color: var(--text); }
@@ -420,7 +448,7 @@
 
       <section class="slide" aria-label="Getting started">
         <h2>Getting started (high level)</h2>
-        <div class="slide-grid">
+        <div class="slide-grid slide-grid--stack-wide">
           <div class="slide-copy">
             <ol style="margin:0;padding-left:1.15rem;font-size:clamp(0.92rem,1.85vw,1.05rem);line-height:1.55;color:var(--text);">
               <li><strong>Clone</strong> the repo (or download ZIP)—scripts need files on disk.</li>
@@ -485,7 +513,7 @@
       }
 
       function paint() {
-        slides.style.transform = "translateX(" + -index * 100 + "%)";
+        slides.style.transform = "translateX(" + -index * 100 + "vw)";
         counter.textContent = index + 1 + " / " + total;
         var buttons = dots.querySelectorAll("button");
         for (var k = 0; k < buttons.length; k++) {
