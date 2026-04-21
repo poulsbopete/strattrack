@@ -85,6 +85,20 @@ function errResult(message, detail) {
   };
 }
 
+/** One line for 1-2-3 draft: CRM shape (account/opportunity/title), then MemPalace import (wing/room/title), then a content teaser. */
+function lineFor123Summary(s) {
+  const crm = [s.account, s.opportunity, s.title].filter(Boolean).join(" — ");
+  if (crm) return crm;
+  const palace = [s.wing, s.room, s.title].filter(Boolean).join(" — ");
+  if (palace) return palace;
+  const raw = s.content != null ? String(s.content).trim() : "";
+  if (raw) {
+    const one = raw.replace(/\s+/g, " ");
+    return one.length > 140 ? `${one.slice(0, 137)}...` : one;
+  }
+  return "";
+}
+
 const server = new McpServer(
   { name: "strattrack-elasticsearch", version: "0.1.0" },
   {
@@ -137,7 +151,7 @@ server.registerTool(
   "elastic_search_opp",
   {
     description:
-      "Search indexed notes and history: multi_match on content, opportunity, and title. Optional filters: account, stage. Use after elastic_add_note (or bulk import) to pull context into completions.",
+      "Search indexed notes and history: multi_match on content, opportunity, title, wing, and room. Optional filters: account, stage. Use after elastic_add_note (or bulk import) to pull context into completions.",
     inputSchema: z.object({
       query: z.string().min(1).describe("Search text"),
       account_filter: z.string().optional().describe("Exact account keyword filter"),
@@ -173,7 +187,7 @@ server.registerTool(
                 multi_match: {
                   query,
                   type: "best_fields",
-                  fields: ["content^2", "opportunity^1.5", "title"],
+                  fields: ["content^2", "opportunity^1.5", "title", "wing^1.2", "room^1.2"],
                   fuzziness: "AUTO",
                 },
               },
@@ -252,7 +266,7 @@ server.registerTool(
   "elastic_get_1_2_3",
   {
     description:
-      "Pull indexed notes for a ONE–TWO–THREE draft plus blocker highlights. Default: no date filter—sorts by note_date/created_at so bulk-imported or migrated rows (old original timestamps) still appear. Pass days>0 to restrict to created_at within the last N days.",
+      "Pull indexed notes for a ONE–TWO–THREE draft plus blocker highlights. Summary lines prefer account/opportunity/title; imported MemPalace rows use wing/room/title or a short content teaser when CRM fields are empty. Default: no date filter—sorts by note_date/created_at. Pass days>0 to restrict to created_at within the last N days.",
     inputSchema: z.object({
       days: z
         .number()
@@ -290,13 +304,13 @@ server.registerTool(
         if (Array.isArray(s.blocker_tags) && s.blocker_tags.length) {
           blockers.push({
             id: h._id,
-            account: s.account,
-            opportunity: s.opportunity,
+            account: s.account ?? s.wing,
+            opportunity: s.opportunity ?? s.room,
             tags: s.blocker_tags,
             title: s.title,
           });
         }
-        const oneLine = [s.account, s.opportunity, s.title].filter(Boolean).join(" — ");
+        const oneLine = lineFor123Summary(s);
         if (oneLine) lines.push(oneLine);
       }
       const draft = {
