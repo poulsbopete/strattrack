@@ -1,0 +1,57 @@
+# Push a SemVer tag to publish:
+#   - @poulsbopete/strattrack-mcp to GitHub Packages (npm)
+#   - dist/strattrack-elasticsearch.mcpb attached to a GitHub Release
+#
+# Example:
+#   git tag v0.1.1 -m "release"
+#   git push origin v0.1.1
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "v*.*"
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  publish-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: https://npm.pkg.github.com
+          scope: "@poulsbopete"
+
+      - name: Set package version from tag
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/v}"
+          echo "Releasing version ${VERSION}"
+          cd mcp
+          npm version "${VERSION}" --no-git-tag-version --allow-same-version
+
+      - name: Install MCP dependencies
+        run: cd mcp && npm ci
+
+      - name: Publish to GitHub Packages
+        run: cd mcp && npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Claude Desktop bundle (.mcpb)
+        run: |
+          chmod +x scripts/build-strattrack-mcpb.sh
+          ./scripts/build-strattrack-mcpb.sh
+
+      - name: Upload .mcpb to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/strattrack-elasticsearch.mcpb
+          generate_release_notes: true
+          fail_on_unmatched_files: true

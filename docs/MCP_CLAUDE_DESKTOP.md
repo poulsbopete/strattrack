@@ -68,6 +68,8 @@ Official MCPB reference: [Building MCPB](https://claude.com/docs/connectors/buil
 
 Manifest source: **`extensions/strattrack-elasticsearch/manifest.json`**.
 
+**Published builds:** after a maintainer pushes a version tag, GitHub Actions attaches **`strattrack-elasticsearch.mcpb`** to a **Release** (and publishes **`@poulsbopete/strattrack-mcp`** to GitHub Packages). See **[GITHUB_PUBLISH.md](./GITHUB_PUBLISH.md)**.
+
 ## Claude Desktop — manual `mcpServers` entry
 
 Edit your Claude Desktop MCP configuration and add a server entry (paths must be **absolute** on your Mac):

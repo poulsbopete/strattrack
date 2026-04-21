@@ -1,0 +1,2 @@
+# One-off MemPalace → Elasticsearch migration (scripts/mempalace_to_elasticsearch.py)
+mempalace>=3.0

@@ -8,6 +8,8 @@
 
 **Remote:** `git@github.com:poulsbopete/strattrack.git`
 
+**Publish (GitHub Packages + Releases):** push a SemVer tag (e.g. `v0.1.1`) to run **Actions** — publishes **`@poulsbopete/strattrack-mcp`** to npm GitHub Packages and attaches **`strattrack-elasticsearch.mcpb`** to a Release. See **[docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)**.
+
 ## Requirements
 
 These are the **platform and access** expectations for the end-to-end workflow (meeting capture → shared visibility → AI assistance → Salesforce → follow-ups). Details and IT copy-paste language: **[docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md)**.
@@ -53,7 +55,8 @@ StratTrack’s **stdio MCP server** (`mcp/strattrack-mcp.mjs`) is how **every us
 | Doc | Purpose |
 |-----|---------|
 | **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Cursor + **Claude Desktop** (config paths, **`.mcpb`** install, manual JSON) |
-| **`./scripts/build-strattrack-mcpb.sh`** | Builds **`dist/strattrack-elasticsearch.mcpb`** (Claude Desktop Extension) |
+| **`./scripts/build-strattrack-mcpb.sh`** | Builds **`dist/strattrack-elasticsearch.mcpb`** (Claude Desktop Extension; CI also builds on release tag) |
+| **[docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)** | **GitHub Packages** (`npm`) + **Releases** (`.mcpb`) from a version tag |
 | **`extensions/strattrack-elasticsearch/manifest.json`** | MCPB manifest (`manifest_version` **0.3**) |
 | **`.cursor/mcp.json.example`** | Copy to `.cursor/mcp.json`, set absolute path to `strattrack-mcp.mjs` |
 | **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** | Optional: API keys in **Apple Keychain** + wrapper script |

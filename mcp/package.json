@@ -1,15 +1,36 @@
 {
-  "name": "strattrack-mcp",
+  "name": "@poulsbopete/strattrack-mcp",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
-  "description": "MCP server: StratTrack / local Elasticsearch (MemPalace replacement path)",
+  "description": "StratTrack MCP server — local Elasticsearch tools (elastic_search_opp, elastic_add_note, elastic_get_1_2_3, …)",
+  "license": "UNLICENSED",
   "engines": {
     "node": ">=18"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/poulsbopete/strattrack.git",
+    "directory": "mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/poulsbopete/strattrack/issues"
+  },
+  "homepage": "https://github.com/poulsbopete/strattrack#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "files": [
+    "strattrack-mcp.mjs",
+    "strattrack-drawers-index.json",
+    "package.json"
+  ],
+  "bin": {
+    "strattrack-mcp": "./strattrack-mcp.mjs"
+  },
   "scripts": {
     "start": "node strattrack-mcp.mjs",
-    "mcp": "node strattrack-mcp.mjs"
+    "mcp": "node strattrack-mcp.mjs",
+    "prepack": "node ../scripts/npm-prepublish-mcp.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
