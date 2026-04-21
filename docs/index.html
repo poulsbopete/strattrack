@@ -14,6 +14,7 @@
       --accent: #58a6ff;
       --accent2: #3fb950;
       --border: #30363d;
+      --ink: #c9d1d9;
       --font: "Segoe UI", system-ui, -apple-system, sans-serif;
     }
     * { box-sizing: border-box; }
@@ -33,38 +34,75 @@
       flex: 0 0 100%;
       width: 100%;
       height: 100%;
-      padding: clamp(1.5rem, 4vw, 3rem);
+      padding: clamp(1rem, 3vw, 2rem) clamp(1.25rem, 4vw, 2.5rem) 3.25rem;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      max-width: 52rem;
+      justify-content: flex-start;
+      max-width: 56rem;
       margin: 0 auto;
       border-left: 3px solid var(--accent);
       background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+      overflow-y: auto;
     }
+    .slide-grid {
+      display: grid;
+      gap: 1rem 1.5rem;
+      align-items: start;
+      flex: 1;
+      min-height: 0;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .slide-grid { grid-template-columns: 1fr minmax(260px, 38%); align-items: center; }
+      .slide-grid.figure-first { grid-template-columns: minmax(260px, 38%) 1fr; }
+      .slide-grid.figure-first .slide-copy { order: 2; }
+      .slide-grid.figure-first .slide-figure { order: 1; }
+    }
+    .slide-copy { min-width: 0; }
+    .slide-figure {
+      margin: 0;
+      padding: 0.75rem;
+      background: rgba(22, 27, 34, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .slide-figure svg {
+      width: 100%;
+      height: auto;
+      max-height: min(34vh, 210px);
+      display: block;
+    }
+    .fig-cap {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin: 0.5rem 0 0;
+      line-height: 1.35;
+      text-align: center;
+    }
+    .fig-cap strong { color: var(--accent2); font-weight: 600; }
     .slide h1 {
-      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-size: clamp(1.5rem, 3.8vw, 2.5rem);
       font-weight: 650;
       line-height: 1.15;
-      margin: 0 0 0.75rem;
+      margin: 0 0 0.5rem;
       letter-spacing: -0.02em;
     }
     .slide h2 {
-      font-size: clamp(1.35rem, 2.8vw, 1.85rem);
+      font-size: clamp(1.2rem, 2.5vw, 1.65rem);
       font-weight: 600;
-      margin: 0 0 1rem;
+      margin: 0 0 0.65rem;
       color: var(--accent);
     }
     .slide p, .slide li {
-      font-size: clamp(1rem, 2vw, 1.2rem);
-      line-height: 1.55;
+      font-size: clamp(0.92rem, 1.85vw, 1.1rem);
+      line-height: 1.5;
       color: var(--muted);
-      max-width: 42rem;
+      max-width: 40rem;
     }
-    .slide ul { margin: 0.5rem 0 0; padding-left: 1.25rem; }
-    .slide li { margin-bottom: 0.5rem; color: var(--text); }
+    .slide ul, .slide ol { margin: 0.35rem 0 0; padding-left: 1.15rem; }
+    .slide li { margin-bottom: 0.4rem; color: var(--text); }
     .slide li span.muted { color: var(--muted); }
-    .tagline { font-size: clamp(1.1rem, 2.2vw, 1.35rem); color: var(--accent2); font-weight: 500; margin-bottom: 1rem; }
+    .tagline { font-size: clamp(1rem, 2vw, 1.25rem); color: var(--accent2); font-weight: 500; margin-bottom: 0.5rem; }
     .footer-bar {
       position: fixed;
       bottom: 0;
@@ -98,115 +136,327 @@
     }
     .cta {
       display: inline-block;
-      margin-top: 1.25rem;
-      padding: 0.65rem 1.1rem;
+      margin-top: 0.85rem;
+      padding: 0.55rem 1rem;
       background: var(--accent);
       color: var(--bg);
       text-decoration: none;
       font-weight: 600;
       border-radius: 6px;
+      font-size: 0.95rem;
     }
     .cta:hover { filter: brightness(1.08); }
-    .logo-row { margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+    .logo-row { margin-bottom: 0.5rem; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
   </style>
 </head>
 <body>
   <div class="deck" role="region" aria-roledescription="carousel" aria-label="StratTrack presentation">
     <div class="slides" id="slides" tabindex="0">
       <section class="slide" aria-label="Title">
-        <div class="logo-row">StratTrack · GitHub Pages</div>
-        <p class="tagline">For Elastic Solution Architects</p>
-        <h1>Turn opportunity chaos into timely, AI-assisted wins</h1>
-        <p>
-          A short pitch on why a <strong>local Elasticsearch</strong> notebook plus
-          <strong>Claude Desktop</strong> MCP helps you live in <strong>Salesforce</strong>—with better context,
-          faster updates, and clearer account plans—so you can <strong>close more opportunities</strong>.
-        </p>
-        <a class="cta" href="https://github.com/poulsbopete/strattrack">Open the StratTrack repo</a>
+        <div class="slide-grid figure-first">
+          <div class="slide-copy">
+            <div class="logo-row">StratTrack · GitHub Pages</div>
+            <p class="tagline">For Elastic Solution Architects</p>
+            <h1>Turn opportunity chaos into timely, AI-assisted wins</h1>
+            <p>
+              A short pitch on why a <strong>local Elasticsearch</strong> notebook plus
+              <strong>Claude Desktop</strong> MCP helps you live in <strong>Salesforce</strong>—with better context,
+              faster updates, and clearer account plans—so you can <strong>close more opportunities</strong>.
+            </p>
+            <a class="cta" href="https://github.com/poulsbopete/strattrack">Open the StratTrack repo</a>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Many opportunities flow into Elasticsearch and Claude, then toward closed deals">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#30363d"/><stop offset="100%" stop-color="#58a6ff"/></linearGradient>
+                <marker id="m1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 7 3.5, 0 7" fill="#8b949e"/></marker>
+              </defs>
+              <text x="200" y="18" text-anchor="middle" fill="#8b949e" font-size="11" font-family="system-ui,sans-serif">Many opps · meetings · Slack</text>
+              <circle cx="70" cy="55" r="10" fill="#21262d" stroke="#484f58"/><circle cx="120" cy="42" r="9" fill="#21262d" stroke="#484f58"/>
+              <circle cx="95" cy="78" r="11" fill="#21262d" stroke="#484f58"/><circle cx="145" cy="72" r="8" fill="#21262d" stroke="#484f58"/>
+              <circle cx="60" cy="95" r="8" fill="#21262d" stroke="#484f58"/><text x="100" y="115" text-anchor="middle" fill="#6e7681" font-size="9">chaos</text>
+              <path d="M130 85 L175 100" stroke="#484f58" stroke-width="1.5" fill="none" marker-end="url(#m1)"/>
+              <path d="M175 100 L175 125" stroke="#484f58" stroke-width="1.5" fill="none" marker-end="url(#m1)"/>
+              <rect x="138" y="125" width="74" height="44" rx="6" fill="#161b22" stroke="#58a6ff" stroke-width="1.5"/>
+              <text x="175" y="145" text-anchor="middle" fill="#58a6ff" font-size="10" font-weight="600" font-family="system-ui,sans-serif">ES</text>
+              <text x="175" y="160" text-anchor="middle" fill="#8b949e" font-size="8">local index</text>
+              <rect x="228" y="125" width="56" height="44" rx="8" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+              <text x="256" y="148" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="600" font-family="system-ui,sans-serif">Claude</text>
+              <text x="256" y="162" text-anchor="middle" fill="#8b949e" font-size="7">MCP</text>
+              <line x1="212" y1="147" x2="228" y2="147" stroke="#8b949e" stroke-width="1.2"/>
+              <path d="M284 147 L330 147" stroke="url(#g1)" stroke-width="2" fill="none" marker-end="url(#m1)"/>
+              <path d="M330 147 L350 100" stroke="#3fb950" stroke-width="1.5" fill="none" opacity="0.8"/>
+              <polygon points="345,88 365,88 355,72" fill="#3fb950" opacity="0.9"/>
+              <text x="348" y="105" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Win</text>
+              <text x="200" y="192" text-anchor="middle" fill="#6e7681" font-size="9" font-family="system-ui,sans-serif">one searchable memory + AI that can retrieve it</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> converge scattered context into ES + Claude. <strong>Why:</strong> reuse truth instead of retyping it every chat.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="The job">
         <h2>The SA job is a firehose</h2>
-        <ul>
-          <li>Dozens of <strong>opportunities</strong> across stages, regions, and solution areas.</li>
-          <li>Every meeting produces nuance—technical blockers, champions, procurement, Elastic Security vs Observability positioning. <strong>Granola</strong> is a natural place to capture it; many teams <strong>drop those notes into Google Drive</strong> (a shared, manager-visible folder) so the narrative isn’t trapped on one laptop.</li>
-          <li><strong>Claude Desktop</strong> chat can <strong>correlate</strong> Drive files with <strong>Salesforce</strong> opportunities and account planning—especially when you also <strong>index takeaways</strong> in StratTrack (<code>elastic_add_note</code> / <code>elastic_search_opp</code>) so the model can search durable history, not just the current thread.</li>
-        </ul>
-        <p style="margin-top:1rem;font-size:clamp(0.9rem,1.8vw,1.05rem);color:var(--muted);">
-          IT / naming / automation pattern: <a href="https://github.com/poulsbopete/strattrack/blob/main/docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md">Granola → Drive → AI / Salesforce</a>.
-        </p>
+        <div class="slide-grid">
+          <div class="slide-copy">
+            <ul>
+              <li>Dozens of <strong>opportunities</strong> across stages, regions, and solution areas.</li>
+              <li>Every meeting produces nuance—technical blockers, champions, procurement, Elastic Security vs Observability positioning. <strong>Granola</strong> is a natural place to capture it; many teams <strong>drop those notes into Google Drive</strong> (a shared, manager-visible folder) so the narrative isn’t trapped on one laptop.</li>
+              <li><strong>Claude Desktop</strong> chat can <strong>correlate</strong> Drive files with <strong>Salesforce</strong> opportunities and account planning—especially when you also <strong>index takeaways</strong> in StratTrack (<code>elastic_add_note</code> / <code>elastic_search_opp</code>) so the model can search durable history, not just the current thread.</li>
+            </ul>
+            <p style="margin-top:0.75rem;font-size:clamp(0.85rem,1.6vw,0.98rem);color:var(--muted);">
+              IT / naming / automation pattern: <a href="https://github.com/poulsbopete/strattrack/blob/main/docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md">Granola → Drive → AI / Salesforce</a>.
+            </p>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Meetings to Granola and Drive, Claude correlates with Salesforce and StratTrack">
+            <svg viewBox="0 0 400 210" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="20" y="25" width="70" height="36" rx="6" fill="#21262d" stroke="#8b949e"/><text x="55" y="48" text-anchor="middle" fill="#e6edf3" font-size="9" font-family="system-ui,sans-serif">Meetings</text>
+              <path d="M90 43 L115 43" stroke="#8b949e" stroke-width="1.5" marker-end="url(#m2)"/>
+              <defs><marker id="m2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#8b949e"/></marker></defs>
+              <rect x="120" y="25" width="72" height="36" rx="6" fill="#21262d" stroke="#58a6ff"/><text x="156" y="48" text-anchor="middle" fill="#58a6ff" font-size="9" font-weight="600" font-family="system-ui,sans-serif">Granola</text>
+              <path d="M192 43 L218 43" stroke="#8b949e" stroke-width="1.5" marker-end="url(#m2)"/>
+              <path d="M225 28 L265 28 L265 58 L225 58 Z" fill="none" stroke="#f0883e" stroke-width="1.3"/>
+              <text x="245" y="48" text-anchor="middle" fill="#f0883e" font-size="8" font-family="system-ui,sans-serif">Drive</text>
+              <path d="M270 43 L305 70" stroke="#8b949e" stroke-width="1.2" marker-end="url(#m2)"/>
+              <ellipse cx="200" cy="130" rx="88" ry="38" fill="none" stroke="#3fb950" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <rect x="125" y="108" width="150" height="44" rx="10" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+              <text x="200" y="128" text-anchor="middle" fill="#3fb950" font-size="11" font-weight="600" font-family="system-ui,sans-serif">Claude Desktop</text>
+              <text x="200" y="143" text-anchor="middle" fill="#8b949e" font-size="8">correlate + draft updates</text>
+              <line x1="200" y1="108" x2="200" y2="88" stroke="#58a6ff" stroke-width="1" opacity="0.7"/>
+              <rect x="20" y="155" width="88" height="40" rx="6" fill="#161b22" stroke="#58a6ff"/>
+              <text x="64" y="172" text-anchor="middle" fill="#58a6ff" font-size="8" font-family="system-ui,sans-serif">StratTrack</text>
+              <text x="64" y="186" text-anchor="middle" fill="#8b949e" font-size="7">indexed notes</text>
+              <path d="M108 175 L155 145" stroke="#8b949e" stroke-width="1" marker-end="url(#m2)"/>
+              <rect x="292" y="155" width="88" height="40" rx="6" fill="#161b22" stroke="#a371f7"/>
+              <text x="336" y="180" text-anchor="middle" fill="#c9d1d9" font-size="9" font-family="system-ui,sans-serif">Salesforce</text>
+              <path d="M245 145 L292 170" stroke="#8b949e" stroke-width="1" marker-end="url(#m2)"/>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> notes leave meetings via Granola/Drive; Claude ties them to CRM + StratTrack. <strong>Why:</strong> one place to reason across “story” and “record.”</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="CRM gap">
         <h2>Salesforce is necessary—not sufficient</h2>
-        <ul>
-          <li>Opportunity fields are great for <strong>stage, amount, close date</strong>—not for rich running narrative.</li>
-          <li>AI assistants in the chat window <strong>forget tomorrow</strong> what you typed today unless you re-feed context.</li>
-          <li>Account planning needs <strong>continuity</strong>: last week’s discovery, yesterday’s architecture sketch, today’s exec ask.</li>
-        </ul>
+        <div class="slide-grid">
+          <div class="slide-copy">
+            <ul>
+              <li>Opportunity fields are great for <strong>stage, amount, close date</strong>—not for rich running narrative.</li>
+              <li>AI assistants in the chat window <strong>forget tomorrow</strong> what you typed today unless you re-feed context.</li>
+              <li>Account planning needs <strong>continuity</strong>: last week’s discovery, yesterday’s architecture sketch, today’s exec ask.</li>
+            </ul>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Thin Salesforce bar versus thick narrative stack with a gap">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <text x="95" y="22" text-anchor="middle" fill="#8b949e" font-size="10" font-family="system-ui,sans-serif">Salesforce</text>
+              <rect x="40" y="32" width="110" height="28" rx="4" fill="#21262d" stroke="#a371f7"/>
+              <rect x="40" y="66" width="110" height="18" rx="3" fill="#21262d" stroke="#484f58"/>
+              <rect x="40" y="90" width="110" height="18" rx="3" fill="#21262d" stroke="#484f58"/>
+              <text x="95" y="50" text-anchor="middle" fill="#c9d1d9" font-size="8">stage · $ · date</text>
+              <text x="200" y="75" text-anchor="middle" fill="#f85149" font-size="11" font-weight="600" font-family="system-ui,sans-serif">GAP</text>
+              <text x="200" y="92" text-anchor="middle" fill="#8b949e" font-size="8">narrative + time</text>
+              <text x="305" y="22" text-anchor="middle" fill="#8b949e" font-size="10" font-family="system-ui,sans-serif">What you actually need</text>
+              <rect x="250" y="32" width="110" height="22" rx="3" fill="#21262d" stroke="#58a6ff"/>
+              <rect x="250" y="58" width="110" height="22" rx="3" fill="#21262d" stroke="#58a6ff"/>
+              <rect x="250" y="84" width="110" height="22" rx="3" fill="#21262d" stroke="#58a6ff"/>
+              <rect x="250" y="110" width="110" height="22" rx="3" fill="#21262d" stroke="#58a6ff"/>
+              <rect x="250" y="136" width="110" height="22" rx="3" fill="#21262d" stroke="#58a6ff"/>
+              <text x="305" y="175" text-anchor="middle" fill="#6e7681" font-size="8" font-family="system-ui,sans-serif">meetings · risk · politics</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> CRM is thin rows; real work is thick context. <strong>Why:</strong> you need durable memory AI can search—not only fields.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="StratTrack">
         <h2>StratTrack: your durable SA memory</h2>
-        <p>
-          <strong>StratTrack</strong> stores structured notes in <strong>Elasticsearch on your machine</strong>
-          (Docker/Podman), wired to <strong>Claude Desktop</strong> via MCP tools:
-          <code>elastic_add_note</code>, <code>elastic_search_opp</code>, <code>elastic_get_1_2_3</code>.
-        </p>
-        <ul>
-          <li><strong>Searchable</strong> by account, opportunity, stage, title, content, and tags you store (e.g. blockers).</li>
-          <li><strong>Yours</strong>—local index, optional auth—built for SA workflow, not a generic cloud scratchpad.</li>
-        </ul>
+        <div class="slide-grid figure-first">
+          <div class="slide-copy">
+            <p>
+              <strong>StratTrack</strong> stores structured notes in <strong>Elasticsearch on your machine</strong>
+              (Docker/Podman), wired to <strong>Claude Desktop</strong> via MCP tools:
+              <code>elastic_add_note</code>, <code>elastic_search_opp</code>, <code>elastic_get_1_2_3</code>.
+            </p>
+            <ul>
+              <li><strong>Searchable</strong> by account, opportunity, stage, title, content, and tags you store (e.g. blockers).</li>
+              <li><strong>Yours</strong>—local index, optional auth—built for SA workflow, not a generic cloud scratchpad.</li>
+            </ul>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Laptop with Elasticsearch cylinder connected to Claude via MCP tools">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="35" y="45" width="120" height="85" rx="8" fill="#161b22" stroke="#484f58"/>
+              <rect x="48" y="58" width="94" height="58" rx="4" fill="#0d1117" stroke="#30363d"/>
+              <rect x="58" y="125" width="74" height="8" rx="2" fill="#30363d"/>
+              <ellipse cx="95" cy="145" rx="40" ry="6" fill="#21262d"/>
+              <rect x="155" y="78" width="55" height="50" rx="25" fill="#21262d" stroke="#58a6ff" stroke-width="1.5"/>
+              <text x="182" y="108" text-anchor="middle" fill="#58a6ff" font-size="9" font-weight="600" font-family="system-ui,sans-serif">ES</text>
+              <path d="M155 100 L125 100" stroke="#58a6ff" stroke-width="1.5"/>
+              <path d="M210 100 L248 100" stroke="#3fb950" stroke-width="1.5" marker-end="url(#m3)"/>
+              <defs><marker id="m3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#3fb950"/></marker></defs>
+              <rect x="250" y="55" width="115" height="95" rx="12" fill="#161b22" stroke="#3fb950" stroke-width="1.5"/>
+              <text x="307" y="78" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Claude</text>
+              <text x="307" y="95" text-anchor="middle" fill="#8b949e" font-size="8">Desktop</text>
+              <rect x="265" y="105" width="84" height="14" rx="3" fill="#21262d"/><text x="307" y="115" text-anchor="middle" fill="#c9d1d9" font-size="7">add_note</text>
+              <rect x="265" y="123" width="84" height="14" rx="3" fill="#21262d"/><text x="307" y="133" text-anchor="middle" fill="#c9d1d9" font-size="7">search_opp</text>
+              <text x="200" y="188" text-anchor="middle" fill="#6e7681" font-size="9" font-family="system-ui,sans-serif">MCP = tools Claude can call against your index</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> local ES + MCP tools in Claude. <strong>Why:</strong> private, fast retrieval purpose-built for SA notes.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="Why ES">
         <h2>Why Elasticsearch for this?</h2>
-        <ul>
-          <li><strong>Instant retrieval</strong> when you ask the model to “pull everything on Acme renewal blockers.”</li>
-          <li><strong>Structured + text</strong>: tie notes to opportunity names, stages, and blocker tags for better answers.</li>
-          <li><strong>Completion history</strong>: what the model produced stays indexed—audit trail beyond a single chat.</li>
-        </ul>
+        <div class="slide-grid">
+          <div class="slide-copy">
+            <ul>
+              <li><strong>Instant retrieval</strong> when you ask the model to “pull everything on Acme renewal blockers.”</li>
+              <li><strong>Structured + text</strong>: tie notes to opportunity names, stages, and blocker tags for better answers.</li>
+              <li><strong>Completion history</strong>: what the model produced stays indexed—audit trail beyond a single chat.</li>
+            </ul>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Search over text and keywords with speed and history layers">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="120" cy="95" r="42" fill="none" stroke="#58a6ff" stroke-width="2" opacity="0.5"/>
+              <line x1="145" y1="70" x2="175" y2="45" stroke="#58a6ff" stroke-width="2"/>
+              <rect x="168" y="32" width="10" height="18" rx="2" fill="#58a6ff" opacity="0.8"/>
+              <rect x="55" y="70" width="52" height="14" rx="2" fill="#21262d" stroke="#484f58"/><text x="81" y="81" text-anchor="middle" fill="#8b949e" font-size="7">full text</text>
+              <rect x="55" y="92" width="52" height="14" rx="2" fill="#21262d" stroke="#484f58"/><text x="81" y="103" text-anchor="middle" fill="#8b949e" font-size="7">account</text>
+              <rect x="55" y="114" width="52" height="14" rx="2" fill="#21262d" stroke="#484f58"/><text x="81" y="125" text-anchor="middle" fill="#8b949e" font-size="7">stage</text>
+              <path d="M185 95 L230 95" stroke="#3fb950" stroke-width="2" marker-end="url(#m4)"/>
+              <defs><marker id="m4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#3fb950"/></marker></defs>
+              <rect x="235" y="55" width="130" height="80" rx="8" fill="#161b22" stroke="#3fb950"/>
+              <text x="300" y="78" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="600" font-family="system-ui,sans-serif">Answers</text>
+              <text x="300" y="95" text-anchor="middle" fill="#8b949e" font-size="8">ranked hits</text>
+              <text x="300" y="112" text-anchor="middle" fill="#8b949e" font-size="8">snippets + fields</text>
+              <rect x="248" y="120" width="104" height="10" rx="2" fill="#21262d"/><text x="300" y="128" text-anchor="middle" fill="#6e7681" font-size="7">model + history</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> search blends text + keywords. <strong>Why:</strong> fast, explainable pulls into Claude without pasting walls of text.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="AI timely">
         <h2>AI that stays on time—not just on brand</h2>
-        <ul>
-          <li><strong>Before a call:</strong> search the account; draft talking points from recent notes and 1–2–3 themes.</li>
-          <li><strong>After a call:</strong> append a crisp <code>elastic_add_note</code> with decisions, risks, and next steps.</li>
-          <li><strong>Fewer tokens:</strong> the model <strong>searches the index</strong> instead of you pasting ten pages of history every time.</li>
-        </ul>
+        <div class="slide-grid figure-first">
+          <div class="slide-copy">
+            <ul>
+              <li><strong>Before a call:</strong> search the account; draft talking points from recent notes and 1–2–3 themes.</li>
+              <li><strong>After a call:</strong> append a crisp <code>elastic_add_note</code> with decisions, risks, and next steps.</li>
+              <li><strong>Fewer tokens:</strong> the model <strong>searches the index</strong> instead of you pasting ten pages of history every time.</li>
+            </ul>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Timeline before call, during call, after call with search and note indexing">
+            <svg viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <line x1="40" y1="100" x2="360" y2="100" stroke="#30363d" stroke-width="2"/>
+              <circle cx="100" cy="100" r="8" fill="#58a6ff"/>
+              <text x="100" y="85" text-anchor="middle" fill="#58a6ff" font-size="9" font-weight="600" font-family="system-ui,sans-serif">Before</text>
+              <text x="100" y="125" text-anchor="middle" fill="#8b949e" font-size="8">search</text>
+              <circle cx="200" cy="100" r="10" fill="#f0883e"/>
+              <text x="200" y="78" text-anchor="middle" fill="#f0883e" font-size="9" font-weight="600" font-family="system-ui,sans-serif">Call</text>
+              <text x="200" y="125" text-anchor="middle" fill="#8b949e" font-size="8">customer</text>
+              <circle cx="300" cy="100" r="8" fill="#3fb950"/>
+              <text x="300" y="85" text-anchor="middle" fill="#3fb950" font-size="9" font-weight="600" font-family="system-ui,sans-serif">After</text>
+              <text x="300" y="125" text-anchor="middle" fill="#8b949e" font-size="8">add_note</text>
+              <path d="M100 60 L200 60 L300 60" stroke="#484f58" stroke-width="1" stroke-dasharray="3 2" fill="none"/>
+              <text x="200" y="55" text-anchor="middle" fill="#6e7681" font-size="8">same index · fewer pasted tokens</text>
+              <rect x="70" y="145" width="260" height="32" rx="6" fill="#161b22" stroke="#30363d"/>
+              <text x="200" y="165" text-anchor="middle" fill="#8b949e" font-size="9" font-family="system-ui,sans-serif">Claude pulls context at each step via MCP</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> rhythm around calls. <strong>Why:</strong> timely AI = retrieve + write back, not one-off clever paragraphs.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="Account planning">
         <h2>Account planning that compounds</h2>
-        <ul>
-          <li>Build a <strong>living map</strong> of stakeholders, use cases, and competitive landmines per account.</li>
-          <li>Use <code>elastic_get_1_2_3</code>-style summaries for <strong>weekly rhythm</strong>: what moved, what’s blocked, what’s next.</li>
-          <li>Align narrative with <strong>Salesforce opportunity reality</strong>—same names, same deals, less drift.</li>
-        </ul>
+        <div class="slide-grid">
+          <div class="slide-copy">
+            <ul>
+              <li>Build a <strong>living map</strong> of stakeholders, use cases, and competitive landmines per account.</li>
+              <li>Use <code>elastic_get_1_2_3</code>-style summaries for <strong>weekly rhythm</strong>: what moved, what’s blocked, what’s next.</li>
+              <li>Align narrative with <strong>Salesforce opportunity reality</strong>—same names, same deals, less drift.</li>
+            </ul>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Account hub with spokes to opportunities stakeholders and weekly summary">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="200" cy="100" r="36" fill="#161b22" stroke="#58a6ff" stroke-width="2"/>
+              <text x="200" y="98" text-anchor="middle" fill="#58a6ff" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Account</text>
+              <text x="200" y="112" text-anchor="middle" fill="#8b949e" font-size="7">single hub</text>
+              <line x1="200" y1="64" x2="200" y2="28" stroke="#484f58"/><rect x="165" y="8" width="70" height="22" rx="4" fill="#21262d" stroke="#3fb950"/><text x="200" y="23" text-anchor="middle" fill="#3fb950" font-size="8">1–2–3 weekly</text>
+              <line x1="232" y1="78" x2="310" y2="45" stroke="#484f58"/><circle cx="325" cy="40" r="14" fill="#21262d" stroke="#a371f7"/><text x="325" y="44" text-anchor="middle" fill="#c9d1d9" font-size="7">Opp A</text>
+              <line x1="168" y1="78" x2="90" y2="45" stroke="#484f58"/><circle cx="75" cy="40" r="14" fill="#21262d" stroke="#a371f7"/><text x="75" y="44" text-anchor="middle" fill="#c9d1d9" font-size="7">Opp B</text>
+              <line x1="220" y1="128" x2="280" y2="155" stroke="#484f58"/><rect x="285" y="145" width="60" height="28" rx="4" fill="#21262d" stroke="#8b949e"/><text x="315" y="162" text-anchor="middle" fill="#8b949e" font-size="7">stakeholders</text>
+              <line x1="180" y1="128" x2="120" y2="155" stroke="#484f58"/><rect x="55" y="145" width="60" height="28" rx="4" fill="#21262d" stroke="#8b949e"/><text x="85" y="162" text-anchor="middle" fill="#8b949e" font-size="7">landmines</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> hub model per account. <strong>Why:</strong> weekly summaries + search keep planning aligned with live opps.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="Close more">
         <h2>Close more opportunities</h2>
-        <ul>
-          <li><strong>Faster follow-through</strong> when next steps live in one searchable place.</li>
-          <li><strong>Fewer dropped threads</strong> when blockers and IT/security notes resurface automatically in search.</li>
-          <li><strong>Better coaching handoffs</strong>—your manager or pod can reason over the same indexed context (future-friendly).</li>
-        </ul>
+        <div class="slide-grid figure-first">
+          <div class="slide-copy">
+            <ul>
+              <li><strong>Faster follow-through</strong> when next steps live in one searchable place.</li>
+              <li><strong>Fewer dropped threads</strong> when blockers and IT/security notes resurface automatically in search.</li>
+              <li><strong>Better coaching handoffs</strong>—your manager or pod can reason over the same indexed context (future-friendly).</li>
+            </ul>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Funnel from many tasks narrowing to closed deals">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M80 40 L320 40 L280 85 L120 85 Z" fill="#21262d" stroke="#484f58"/>
+              <text x="200" y="68" text-anchor="middle" fill="#8b949e" font-size="9">open threads · blockers</text>
+              <path d="M120 95 L280 95 L250 140 L150 140 Z" fill="#161b22" stroke="#58a6ff"/>
+              <text x="200" y="123" text-anchor="middle" fill="#58a6ff" font-size="9">searchable next steps</text>
+              <path d="M150 150 L250 150 L220 182 L180 182 Z" fill="#1a3d2e" stroke="#3fb950" stroke-width="1.5"/>
+              <text x="200" y="174" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600" font-family="system-ui,sans-serif">Closed-won path</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> shrink the gap between “knowing” and “doing.” <strong>Why:</strong> velocity + fewer misses = more wins.</figcaption>
+          </figure>
+        </div>
       </section>
 
       <section class="slide" aria-label="Getting started">
         <h2>Getting started (high level)</h2>
-        <ol style="margin:0;padding-left:1.25rem;font-size:clamp(1rem,2vw,1.15rem);line-height:1.6;color:var(--text);">
-          <li><strong>Clone</strong> the repo (or download ZIP)—scripts need files on disk.</li>
-          <li>Run <code>./scripts/quickstart-local-es.sh</code> for Elasticsearch + index (or build + init scripts separately).</li>
-          <li>Install the MCP extension from <a href="https://github.com/poulsbopete/strattrack/releases">GitHub Releases</a> (<code>strattrack-elasticsearch.mcpb</code>).</li>
-          <li>Use Claude Desktop to add notes and search before big moments.</li>
-        </ol>
-        <p style="margin-top:1rem;">
-          Full steps: <a href="https://github.com/poulsbopete/strattrack/blob/main/README.md">README</a> ·
-          MCP wiring: <a href="https://github.com/poulsbopete/strattrack/blob/main/docs/MCP_CLAUDE_DESKTOP.md">MCP_CLAUDE_DESKTOP.md</a>
-        </p>
+        <div class="slide-grid">
+          <div class="slide-copy">
+            <ol style="margin:0;padding-left:1.15rem;font-size:clamp(0.92rem,1.85vw,1.05rem);line-height:1.55;color:var(--text);">
+              <li><strong>Clone</strong> the repo (or download ZIP)—scripts need files on disk.</li>
+              <li>Run <code>./scripts/quickstart-local-es.sh</code> for Elasticsearch + index (or build + init scripts separately).</li>
+              <li>Install the MCP extension from <a href="https://github.com/poulsbopete/strattrack/releases">GitHub Releases</a> (<code>strattrack-elasticsearch.mcpb</code>).</li>
+              <li>Use Claude Desktop to add notes and search before big moments.</li>
+            </ol>
+            <p style="margin-top:0.75rem;font-size:clamp(0.88rem,1.7vw,1rem);">
+              Full steps: <a href="https://github.com/poulsbopete/strattrack/blob/main/README.md">README</a> ·
+              MCP wiring: <a href="https://github.com/poulsbopete/strattrack/blob/main/docs/MCP_CLAUDE_DESKTOP.md">MCP_CLAUDE_DESKTOP.md</a>
+            </p>
+          </div>
+          <figure class="slide-figure" role="img" aria-label="Four steps: clone repository, quickstart script, install mcpb from releases, use Claude">
+            <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="25" y="70" width="72" height="52" rx="8" fill="#161b22" stroke="#58a6ff"/>
+              <text x="61" y="92" text-anchor="middle" fill="#58a6ff" font-size="10" font-weight="600" font-family="system-ui,sans-serif">1</text>
+              <text x="61" y="108" text-anchor="middle" fill="#8b949e" font-size="8">Clone</text>
+              <path d="M97 96 L118 96" stroke="#8b949e" stroke-width="2" marker-end="url(#m5)"/>
+              <defs><marker id="m5" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#8b949e"/></marker></defs>
+              <rect x="120" y="70" width="72" height="52" rx="8" fill="#161b22" stroke="#58a6ff"/>
+              <text x="156" y="92" text-anchor="middle" fill="#58a6ff" font-size="10" font-weight="600" font-family="system-ui,sans-serif">2</text>
+              <text x="156" y="108" text-anchor="middle" fill="#8b949e" font-size="7">quickstart</text>
+              <path d="M192 96 L213 96" stroke="#8b949e" stroke-width="2" marker-end="url(#m5)"/>
+              <rect x="215" y="70" width="72" height="52" rx="8" fill="#161b22" stroke="#3fb950"/>
+              <text x="251" y="92" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600" font-family="system-ui,sans-serif">3</text>
+              <text x="251" y="108" text-anchor="middle" fill="#8b949e" font-size="7">.mcpb</text>
+              <path d="M287 96 L308 96" stroke="#8b949e" stroke-width="2" marker-end="url(#m5)"/>
+              <rect x="310" y="70" width="65" height="52" rx="8" fill="#161b22" stroke="#3fb950"/>
+              <text x="342" y="92" text-anchor="middle" fill="#3fb950" font-size="10" font-weight="600" font-family="system-ui,sans-serif">4</text>
+              <text x="342" y="108" text-anchor="middle" fill="#8b949e" font-size="7">Claude</text>
+              <text x="200" y="48" text-anchor="middle" fill="#6e7681" font-size="10" font-family="system-ui,sans-serif">minimal path to first useful tool call</text>
+              <text x="200" y="165" text-anchor="middle" fill="#8b949e" font-size="9" font-family="system-ui,sans-serif">Docker/Podman required for step 2</text>
+            </svg>
+            <figcaption class="fig-cap"><strong>What:</strong> four concrete hops. <strong>Why:</strong> ES + index + MCP in one evening, then iterate on workflow.</figcaption>
+          </figure>
+        </div>
       </section>
     </div>
   </div>
