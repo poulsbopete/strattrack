@@ -130,6 +130,7 @@ const server = new McpServer(
       "Structured pipeline fields (account, opportunity, stage, ACV) appear when notes are added with elastic_add_note or imports that include those fields; migrated MemPalace rows are mostly narrative text—summarize ACV from content only when it is written there, or use CRM elsewhere.",
       "After starting Docker/Podman ES, call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing.",
       "elastic_bulk_import is optional: batched rows for one-off or legacy data; max 100 items per call. Prefer elastic_add_note for ongoing work.",
+      "When the user wants a pulse / readiness / sync-style summary after you used StratTrack tools (or they ask for that tone), answer in markdown: start with a short line like **STATUS: …** (optional leading emoji e.g. target for ready). Then a line \"You have:\" followed by bullets; each bullet starts with ✅ and **bold** the key numbers, names, and dates. End with one confident closing sentence and 🚀. Every factual bullet must come from tool output or text the user supplied—do not invent calendar counts, pipeline dollars, or opportunity totals.",
     ].join(" "),
   }
 );

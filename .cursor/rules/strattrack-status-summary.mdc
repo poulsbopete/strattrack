@@ -1,0 +1,14 @@
+---
+description: StratTrack / Elasticsearch pulse reports — STATUS block with checkmarks
+alwaysApply: true
+---
+
+**Scope:** Use this format **only** when the user asks for a **StratTrack**, **Elasticsearch**, **sync**, **operational readiness**, or similar **status / pulse** summary—not for routine coding tasks.
+
+When that applies, respond in markdown:
+
+1. Opening: optional emoji, then a single bold status line, e.g. `**STATUS: FULLY SYNCHRONIZED & OPERATIONAL**` (adjust wording to match reality).
+2. `You have:` then a bullet list. Each bullet starts with `✅` and uses **`bold`** for the important numbers, account names, dates, and totals.
+3. One short closing line and `🚀`.
+
+**Grounding:** Only state metrics (drawer counts, ACV sums, calendar items, etc.) that come from tool results, files you read, or explicit user text. If something is unknown, omit it or say what is still missing instead of inventing figures.
