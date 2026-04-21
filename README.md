@@ -41,7 +41,7 @@ These are the **platform and access** expectations for the end-to-end workflow (
 |---------------|---------|
 | **Data classification** for transcripts in Drive | Legal / InfoSec may require summary-only, retention, or customer-specific rules. |
 | **External AI policy** | Clarify whether note content may be processed by **third-party** model APIs or must stay in **Google-only** (or other) tooling. |
-| **No secrets in git** | API keys and OAuth live in env or secret stores — not committed to this repo. |
+| **No secrets in git** | API keys and OAuth live in env or secret stores — not committed to this repo. On Mac, prefer **Keychain** + **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** and `scripts/run-strattrack-mcp-from-keychain.sh` for the MCP server. |
 
 ## MCP (Claude Desktop) + MemPalace migration
 
@@ -50,6 +50,7 @@ StratTrack includes a **stdio MCP server** that talks to local Elasticsearch (`m
 | Doc | Purpose |
 |-----|---------|
 | **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)** | Claude Desktop config, env vars, tool list |
+| **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** | Store API keys in **Apple Keychain**; wrapper script for MCP |
 | **[docs/MEMPALACE_MIGRATION.md](docs/MEMPALACE_MIGRATION.md)** | Moving [MemPalace](https://github.com/MemPalace/mempalace) wings/rooms/drawers into ES via `elastic_bulk_import_mempalace` |
 | **[skills/strattrack-elasticsearch-mcp/SKILL.md](skills/strattrack-elasticsearch-mcp/SKILL.md)** | Cursor / agent skill (copy to `~/.cursor/skills-cursor/` if desired) |
 

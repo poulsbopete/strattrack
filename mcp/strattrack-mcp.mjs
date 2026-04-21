@@ -14,11 +14,25 @@ function log(...args) {
   console.error("[strattrack-mcp]", ...args);
 }
 
+/** Optional: Elasticsearch API key (Kibana “Encoded” value) or Basic auth (already base64 user:pass). From env or macOS Keychain via wrapper script. */
+function esAuthHeaders() {
+  const headers = {};
+  const apiKey = process.env.ELASTICSEARCH_API_KEY;
+  const basic = process.env.ELASTICSEARCH_BASIC_AUTH;
+  if (apiKey) headers.Authorization = `ApiKey ${apiKey}`;
+  else if (basic) headers.Authorization = `Basic ${basic}`;
+  return headers;
+}
+
 async function esFetch(path, { method = "GET", body } = {}) {
   const url = `${ES_URL}${path.startsWith("/") ? path : `/${path}`}`;
   const init = {
     method,
-    headers: { Accept: "application/json", "Content-Type": "application/json" },
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      ...esAuthHeaders(),
+    },
   };
   if (body !== undefined) init.body = JSON.stringify(body);
   const res = await fetch(url, init);
@@ -39,7 +53,7 @@ async function esFetch(path, { method = "GET", body } = {}) {
 }
 
 async function indexExists() {
-  const res = await fetch(`${ES_URL}/${INDEX}`, { method: "HEAD" });
+  const res = await fetch(`${ES_URL}/${INDEX}`, { method: "HEAD", headers: { ...esAuthHeaders() } });
   return res.ok;
 }
 
@@ -364,7 +378,7 @@ server.registerTool(
       const ndjson = lines.join("\n") + "\n";
       const res = await fetch(`${ES_URL}/_bulk?refresh=wait_for`, {
         method: "POST",
-        headers: { "Content-Type": "application/x-ndjson" },
+        headers: { "Content-Type": "application/x-ndjson", ...esAuthHeaders() },
         body: ndjson,
       });
       const text = await res.text();

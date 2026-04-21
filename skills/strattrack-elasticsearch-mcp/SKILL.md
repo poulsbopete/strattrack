@@ -36,4 +36,4 @@ Point `SKILL.md` at the same content as this file.
 ## Conventions
 
 - Logs from the MCP server go to **stderr** only.
-- Do not commit **secrets**; use Claude env or Desktop `env` block for URLs if non-default.
+- Do not commit **secrets**. On macOS use **Keychain** + `scripts/run-strattrack-mcp-from-keychain.sh` (see **`docs/MACOS_KEYCHAIN.md`**). Non-secret URLs may stay in Claude Desktop `env`.

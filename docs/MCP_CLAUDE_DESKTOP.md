@@ -12,6 +12,12 @@
 |----------|---------|---------|
 | `ELASTICSEARCH_URL` | `http://localhost:9200` | Elasticsearch HTTP endpoint |
 | `STRATTRACK_INDEX` | `strattrack_drawers` | Index name for notes / MemPalace migration |
+| `ELASTICSEARCH_API_KEY` | _(unset)_ | Optional; Kibana **Encoded** API key when Elasticsearch has security on |
+| `ELASTICSEARCH_BASIC_AUTH` | _(unset)_ | Optional; **base64**(`user:pass`) for Basic auth |
+
+### Secrets: macOS Keychain (recommended on Mac)
+
+Do **not** put API keys in the JSON `env` block. Use Apple’s **Keychain** and the wrapper script **`scripts/run-strattrack-mcp-from-keychain.sh`** so Claude Desktop only stores non-secret env vars. Full steps: **[MACOS_KEYCHAIN.md](./MACOS_KEYCHAIN.md)**.
 
 ## Claude Desktop config
 
@@ -33,6 +39,8 @@ Edit your Claude Desktop MCP configuration and add a server entry (paths must be
 ```
 
 Replace `/Users/YOU/opt/strattrack` with your clone path. Restart Claude Desktop after saving.
+
+**With Keychain:** set `"command"` to `/Users/YOU/opt/strattrack/scripts/run-strattrack-mcp-from-keychain.sh` and `"args": []` — see [MACOS_KEYCHAIN.md](./MACOS_KEYCHAIN.md).
 
 ## Tools exposed
 
