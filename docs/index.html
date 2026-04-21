@@ -54,28 +54,34 @@
     }
     .slide-grid {
       display: grid;
-      gap: 1rem 1.5rem;
-      align-items: start;
+      gap: 0.85rem 1rem;
+      align-items: stretch;
       flex: 1;
       min-height: 0;
       min-width: 0;
       width: 100%;
       grid-template-columns: 1fr;
     }
+    /* Mobile / narrow: infographic first so it reads big before the wall of text */
+    @media (max-width: 959px) {
+      .slide-grid:not(.slide-grid--stack-wide) .slide-figure { order: -1; }
+    }
     @media (min-width: 960px) {
       .slide-grid:not(.slide-grid--stack-wide) {
-        grid-template-columns: minmax(0, 1fr) minmax(220px, min(36vw, 340px));
+        /* Text capped so diagram can grow on ultrawide (less empty middle) */
+        grid-template-columns: minmax(0, min(40rem, 48%)) minmax(300px, 1fr);
         align-items: center;
+        column-gap: clamp(0.75rem, 2vw, 1.5rem);
       }
       .slide-grid.figure-first:not(.slide-grid--stack-wide) {
-        grid-template-columns: minmax(220px, min(36vw, 340px)) minmax(0, 1fr);
+        grid-template-columns: minmax(300px, 1fr) minmax(0, min(40rem, 48%));
       }
       .slide-grid.figure-first .slide-copy { order: 2; }
       .slide-grid.figure-first .slide-figure { order: 1; }
     }
     @media (min-width: 1100px) {
       .slide-grid.slide-grid--stack-wide {
-        grid-template-columns: minmax(0, 1fr) minmax(220px, min(34vw, 320px));
+        grid-template-columns: minmax(0, min(38rem, 46%)) minmax(300px, 1fr);
         align-items: center;
       }
     }
@@ -92,24 +98,29 @@
     }
     .slide-figure {
       margin: 0;
-      padding: 0.75rem;
-      background: rgba(22, 27, 34, 0.85);
+      padding: clamp(0.85rem, 2vw, 1.25rem);
+      background: linear-gradient(165deg, rgba(22, 27, 34, 0.95) 0%, rgba(13, 17, 23, 0.98) 100%);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(88, 166, 255, 0.12);
       min-width: 0;
       max-width: 100%;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .slide-figure svg {
       width: 100%;
       height: auto;
-      max-height: min(34vh, 210px);
+      max-height: min(52vh, 420px);
       display: block;
     }
     .fig-cap {
-      font-size: 0.7rem;
+      font-size: clamp(0.72rem, 1.6vw, 0.85rem);
       color: var(--muted);
-      margin: 0.5rem 0 0;
-      line-height: 1.35;
+      margin: 0.65rem 0 0;
+      line-height: 1.4;
       text-align: center;
     }
     .fig-cap strong { color: var(--accent2); font-weight: 600; }
