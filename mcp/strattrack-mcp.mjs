@@ -3,9 +3,17 @@
  * StratTrack MCP — stdio server talking to local Elasticsearch (Docker/Podman).
  * Log only to stderr; stdout is reserved for MCP JSON-RPC.
  */
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const INDEX_SETTINGS = JSON.parse(
+  readFileSync(join(__dirname, "..", "docker", "strattrack-drawers-index.json"), "utf8")
+);
 
 const ES_URL = (process.env.ELASTICSEARCH_URL || "http://localhost:9200").replace(/\/$/, "");
 const INDEX = process.env.STRATTRACK_INDEX || "strattrack_drawers";
@@ -56,29 +64,6 @@ async function indexExists() {
   const res = await fetch(`${ES_URL}/${INDEX}`, { method: "HEAD", headers: { ...esAuthHeaders() } });
   return res.ok;
 }
-
-const INDEX_SETTINGS = {
-  settings: { number_of_shards: 1, number_of_replicas: 0 },
-  mappings: {
-    properties: {
-      content: { type: "text" },
-      title: {
-        type: "text",
-        fields: { keyword: { type: "keyword", ignore_above: 256 } },
-      },
-      opportunity: { type: "text" },
-      account: { type: "keyword" },
-      stage: { type: "keyword" },
-      wing: { type: "keyword" },
-      room: { type: "keyword" },
-      mempalace_drawer_id: { type: "keyword" },
-      source: { type: "keyword" },
-      blocker_tags: { type: "keyword" },
-      note_date: { type: "date" },
-      created_at: { type: "date" },
-    },
-  },
-};
 
 function textResult(obj) {
   return { content: [{ type: "text", text: JSON.stringify(obj, null, 2) }] };

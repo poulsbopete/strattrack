@@ -87,6 +87,8 @@ Compose files: `docker/docker-compose.elasticsearch.yml` (single-node, security 
 
 **Access / “login”:** default image has **no password** — open **[http://localhost:9200](http://localhost:9200)** or use `curl`. Shell into the container, optional Kibana/security: **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)**.
 
+**First-time index:** run **`./scripts/init-strattrack-index.sh`** (or MCP **`elastic_ensure_index`**) before `strattrack_drawers` exists — otherwise `_count` / search return `index_not_found_exception`.
+
 **Stop** (use the same `-f` list you used to start, including `podman-compat` if applicable):
 
 ```bash

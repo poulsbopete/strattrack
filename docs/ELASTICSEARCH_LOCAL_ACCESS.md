@@ -35,7 +35,17 @@ curl -s http://localhost:9200 | head
 curl -s http://localhost:9200/_cluster/health?pretty
 ```
 
-### Check your StratTrack index (after `elastic_ensure_index` or MCP)
+### Create the StratTrack index (first time only)
+
+The cluster starts **without** the `strattrack_drawers` index. Create it once:
+
+```bash
+./scripts/init-strattrack-index.sh
+```
+
+Or use the MCP tool **`elastic_ensure_index`**. Until one of these runs, `/_count` returns **`index_not_found_exception`**.
+
+### Check your StratTrack index
 
 ```bash
 curl -s "http://localhost:9200/strattrack_drawers/_count?pretty"
