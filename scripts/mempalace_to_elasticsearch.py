@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-Copy MemPalace Chroma drawers into StratTrack Elasticsearch (strattrack_drawers).
+Copy Chroma-backed drawers from a local palace directory into StratTrack Elasticsearch (strattrack_drawers).
 
 Requires: pip install -r scripts/requirements-mempalace-migrate.txt
            Local Elasticsearch running (./scripts/build-elastic-docker.sh)
            Optional: ./scripts/init-strattrack-index.sh (or let --ensure-index create it)
 
-Does not delete MemPalace data — read-only on the palace.
+Read-only on the source Chroma directory (no deletes).
 """
 from __future__ import annotations
 
@@ -101,13 +101,13 @@ def _open_chroma_collection(palace_path: str, collection_name: str):
         import chromadb
     except ImportError as e:
         sys.exit(
-            "chromadb is required. Install MemPalace deps:\n"
+            "chromadb is required. Install:\n"
             "  pip install -r scripts/requirements-mempalace-migrate.txt\n"
             f"Original error: {e}"
         )
     db = Path(palace_path) / "chroma.sqlite3"
     if not db.is_file():
-        sys.exit(f"No MemPalace palace at {palace_path!r} (missing chroma.sqlite3).")
+        sys.exit(f"No Chroma data at {palace_path!r} (missing chroma.sqlite3).")
     client = chromadb.PersistentClient(path=palace_path)
     try:
         return client.get_collection(collection_name)
@@ -152,7 +152,7 @@ def _build_es_doc(drawer_id: str, content: str, meta: dict, now_iso: str) -> dic
         "wing": _meta_scalar(meta.get("wing")),
         "room": _meta_scalar(meta.get("room")),
         "mempalace_drawer_id": drawer_id,
-        "source": "mempalace_migration_script",
+        "source": "strattrack_chroma_import",
         "created_at": _meta_scalar(meta.get("created_at") or meta.get("timestamp"))
         or now_iso,
         "note_date": _meta_scalar(meta.get("note_date") or meta.get("timestamp"))
@@ -179,17 +179,17 @@ def _bulk_post(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Migrate MemPalace Chroma drawers to StratTrack Elasticsearch."
+        description="Migrate Chroma drawers from a palace directory into StratTrack Elasticsearch."
     )
     parser.add_argument(
         "--palace",
         default=os.environ.get("MEMPALACE_PALACE_PATH", os.path.expanduser("~/.mempalace/palace")),
-        help="MemPalace palace directory (contains chroma.sqlite3).",
+        help="Directory containing chroma.sqlite3 (default ~/.mempalace/palace or MEMPALACE_PALACE_PATH).",
     )
     parser.add_argument(
         "--collection",
         default=os.environ.get("MEMPALACE_COLLECTION", "mempalace_drawers"),
-        help="Chroma collection name (MemPalace default: mempalace_drawers).",
+        help="Chroma collection name (default mempalace_drawers or MEMPALACE_COLLECTION).",
     )
     parser.add_argument(
         "--es-url",
@@ -233,7 +233,7 @@ def main() -> int:
 
     coll = _open_chroma_collection(args.palace, args.collection)
     total = coll.count()
-    print(f"MemPalace palace: {args.palace}", file=sys.stderr)
+    print(f"Chroma directory: {args.palace}", file=sys.stderr)
     print(f"Chroma collection: {args.collection!r}, drawers: {total}", file=sys.stderr)
 
     if args.dry_run:

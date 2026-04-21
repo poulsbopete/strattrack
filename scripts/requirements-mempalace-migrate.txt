@@ -1,2 +1,2 @@
-# One-off MemPalace → Elasticsearch migration (scripts/mempalace_to_elasticsearch.py)
+# Optional Chroma → Elasticsearch helper (scripts/mempalace_to_elasticsearch.py); pip package name unchanged
 mempalace>=3.0

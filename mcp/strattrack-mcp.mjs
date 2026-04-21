@@ -92,7 +92,7 @@ const server = new McpServer(
       "StratTrack MCP uses local Elasticsearch (default http://localhost:9200, index strattrack_drawers).",
       "Team workflow: use elastic_add_note to append running history for completions; elastic_search_opp and elastic_get_1_2_3 to retrieve and summarize indexed context.",
       "After starting Docker/Podman ES, call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing.",
-      "elastic_bulk_import_mempalace is optional: batched wing/room-shaped imports (e.g. one maintainer migrating a personal MemPalace export); max 100 items per call.",
+      "elastic_bulk_import is optional: batched wing/room-shaped rows for one-off or legacy data; max 100 items per call. Prefer elastic_add_note for ongoing work.",
     ].join(" "),
   }
 );
@@ -142,8 +142,8 @@ server.registerTool(
       query: z.string().min(1).describe("Search text"),
       account_filter: z.string().optional().describe("Exact account keyword filter"),
       stage_filter: z.string().optional().describe("Exact stage keyword filter"),
-      wing: z.string().optional().describe("MemPalace wing filter"),
-      room: z.string().optional().describe("MemPalace room filter"),
+      wing: z.string().optional().describe("Optional wing taxonomy filter"),
+      room: z.string().optional().describe("Optional room taxonomy filter"),
       limit: z.number().int().min(1).max(50).optional().default(10),
     }),
   },
@@ -214,7 +214,7 @@ server.registerTool(
   "elastic_add_note",
   {
     description:
-      "Primary tool for ongoing history: index a note or decision (Solution Architect context, meeting takeaway, etc.). Same index powers search and 1-2-3. Optional mempalace_drawer_id sets _id for idempotent upserts (e.g. personal MemPalace migration).",
+      "Primary tool for ongoing history: index a note or decision (Solution Architect context, meeting takeaway, etc.). Same index powers search and 1-2-3. Optional stable document id sets Elasticsearch _id for idempotent upserts when re-indexing the same logical row.",
     inputSchema: z.object({
       content: z.string().min(1),
       title: z.string().optional(),
@@ -223,7 +223,10 @@ server.registerTool(
       stage: z.string().optional(),
       wing: z.string().optional(),
       room: z.string().optional(),
-      mempalace_drawer_id: z.string().optional(),
+      mempalace_drawer_id: z
+        .string()
+        .optional()
+        .describe("Optional stable _id for PUT upserts (same field name as index mapping)"),
       blocker_tags: z.array(z.string()).optional(),
       source: z.string().optional().default("mcp"),
     }),
@@ -329,12 +332,15 @@ server.registerTool(
   }
 );
 
-const mempalaceItem = z.object({
+const bulkImportRow = z.object({
   wing: z.string().optional(),
   room: z.string().optional(),
   content: z.string().min(1),
   title: z.string().optional(),
-  mempalace_drawer_id: z.string().optional(),
+  mempalace_drawer_id: z
+    .string()
+    .optional()
+    .describe("Optional stable _id per row for bulk upserts (same field name as index mapping)"),
   account: z.string().optional(),
   opportunity: z.string().optional(),
   stage: z.string().optional(),
@@ -342,13 +348,13 @@ const mempalaceItem = z.object({
 });
 
 server.registerTool(
-  "elastic_bulk_import_mempalace",
+  "elastic_bulk_import",
   {
     description:
-      "Optional bulk import: up to 100 rows with wing/room/content (MemPalace-shaped or any batched drawers). For team day-to-day use elastic_add_note instead. Use stable mempalace_drawer_id per row for upserts; split large exports into multiple calls.",
+      "Optional bulk import: up to 100 rows with wing/room/content. For day-to-day indexing use elastic_add_note instead. Use each row's optional stable id for upserts; split large batches into multiple calls.",
     inputSchema: z.object({
-      items: z.array(mempalaceItem).min(1).max(100),
-      source: z.string().optional().default("mempalace_migration"),
+      items: z.array(bulkImportRow).min(1).max(100),
+      source: z.string().optional().default("strattrack_bulk_import"),
     }),
   },
   async ({ items, source }) => {

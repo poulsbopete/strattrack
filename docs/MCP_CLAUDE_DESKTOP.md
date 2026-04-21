@@ -2,13 +2,13 @@
 
 ## Team model (default)
 
-**MemPalace is not a team dependency.** Only someone who already has a personal MemPalace may run a **one-off import** ([MEMPALACE_MIGRATION.md](./MEMPALACE_MIGRATION.md)). For **everyone else**, StratTrack is:
+StratTrack is:
 
 1. **Local Elasticsearch** (Docker/Podman) + index `strattrack_drawers`.
 2. This **MCP server** wired in Cursor or Claude Desktop.
 3. Ongoing work: call **`elastic_add_note`** to append notes/decisions (running history for completions), **`elastic_search_opp`** to retrieve context, **`elastic_get_1_2_3`** for weekly-style summaries.
 
-That combination replaces the *function* MemPalace served for one person — **searchable, durable memory** — with a **shared, MCP-addressable** index.
+That gives the team **searchable, durable memory** in a **shared, MCP-addressable** index.
 
 ## Do you need to wait for the terminal?
 
@@ -38,7 +38,7 @@ So: keep **Elasticsearch** running all the time; let the **IDE** launch the **MC
 | Variable | Default | Purpose |
 |----------|---------|---------|
 | `ELASTICSEARCH_URL` | `http://localhost:9200` | Elasticsearch HTTP endpoint |
-| `STRATTRACK_INDEX` | `strattrack_drawers` | Index name for notes / MemPalace migration |
+| `STRATTRACK_INDEX` | `strattrack_drawers` | Index name for notes and search |
 | `ELASTICSEARCH_API_KEY` | _(unset)_ | Optional; Kibana **Encoded** API key when Elasticsearch has security on |
 | `ELASTICSEARCH_BASIC_AUTH` | _(unset)_ | Optional; **base64**(`user:pass`) for Basic auth |
 
@@ -112,14 +112,13 @@ Keep **Elasticsearch running** (`./scripts/build-elastic-docker.sh`) while you t
 | `elastic_add_note` | Index a single document |
 | `elastic_get_1_2_3` | Draft ONE–TWO–THREE from recent docs |
 | `elastic_sync_to_sf` | Stub until Phase 3+ |
-| `elastic_bulk_import_mempalace` | Bulk import up to 100 drawer-shaped rows per call (optional MemPalace migration **or** any batched wing/room content) |
+| `elastic_bulk_import` | Optional bulk import: up to 100 batched rows (wing/room/content); day-to-day use **`elastic_add_note`** instead |
 
 ## First run checklist
 
 1. `elastic_cluster_health` — expect `status` yellow or green.
 2. `elastic_ensure_index` — creates `strattrack_drawers` if missing (or run `./scripts/init-strattrack-index.sh`).
 3. **Team use:** index ongoing work with **`elastic_add_note`**; verify with **`elastic_search_opp`**.
-4. **Optional:** personal MemPalace import — **[MEMPALACE_MIGRATION.md](./MEMPALACE_MIGRATION.md)** only if you used MemPalace.
 
 ## Logging
 
