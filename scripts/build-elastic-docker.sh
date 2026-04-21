@@ -19,13 +19,14 @@ usage() {
 }
 
 NO_START=false
-NO_CACHE=()
+# Optional --no-cache (empty string under set -u; do not use empty array for flags)
+NO_CACHE_FLAG=""
 PODMAN_COMPAT=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --no-start) NO_START=true ;;
-    --no-cache) NO_CACHE=(--no-cache) ;;
+    --no-cache) NO_CACHE_FLAG="--no-cache" ;;
     --podman-compat) PODMAN_COMPAT=true ;;
     -h | --help)
       usage
@@ -126,7 +127,8 @@ fi
 
 echo "Using: ${COMPOSE_BACKEND} compose"
 echo "Building Elasticsearch image (compose project: strattrack)..."
-compose_cmd "${COMPOSE_ARGS[@]}" build "${NO_CACHE[@]}" elasticsearch
+# shellcheck disable=SC2086 # empty NO_CACHE_FLAG must omit the word entirely
+compose_cmd "${COMPOSE_ARGS[@]}" build ${NO_CACHE_FLAG} elasticsearch
 
 if [[ "${NO_START}" == true ]]; then
   echo "Skipping start (--no-start). Image is ready."
