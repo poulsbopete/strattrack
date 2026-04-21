@@ -107,12 +107,27 @@ function isCrmOnlyRow(s) {
   return [s.account, s.opportunity, s.title].filter(Boolean).length >= 1;
 }
 
+/** Shrink huge migrated drawers in search responses so the model can read many hits. */
+function trimHitSource(src, maxContentChars) {
+  if (maxContentChars == null || maxContentChars <= 0 || !src || typeof src !== "object") {
+    return src;
+  }
+  const out = { ...src };
+  if (typeof out.content === "string" && out.content.length > maxContentChars) {
+    out.content = `${out.content.slice(0, maxContentChars)}…`;
+    out.content_truncated = true;
+  }
+  return out;
+}
+
 const server = new McpServer(
   { name: "strattrack-elasticsearch", version: "0.1.0" },
   {
     instructions: [
       "StratTrack MCP uses local Elasticsearch (default http://localhost:9200, index strattrack_drawers).",
-      "Team workflow: use elastic_add_note to append running history for completions; elastic_search_opp and elastic_get_1_2_3 to retrieve and summarize indexed context.",
+      "MemPalace-style recall: use elastic_search_opp with rich natural-language queries (account names, deal topics, acronyms). It scores full-text content, titles, wing, room, and opportunity fields. Run several searches with different phrasings if the first pass is thin.",
+      "elastic_get_1_2_3 is NOT full memory: it returns a compact snapshot from the newest N documents (plus index_doc_count). Do not use it alone to answer open-ended history questions.",
+      "Structured pipeline fields (account, opportunity, stage, ACV) appear when notes are added with elastic_add_note or imports that include those fields; migrated MemPalace rows are mostly narrative text—summarize ACV from content only when it is written there, or use CRM elsewhere.",
       "After starting Docker/Podman ES, call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing.",
       "elastic_bulk_import is optional: batched rows for one-off or legacy data; max 100 items per call. Prefer elastic_add_note for ongoing work.",
     ].join(" "),
@@ -159,15 +174,24 @@ server.registerTool(
   "elastic_search_opp",
   {
     description:
-      "Search indexed notes and history: multi_match on content, opportunity, title, wing, and room. Optional filters: account, stage. Use after elastic_add_note (or bulk import) to pull context into completions.",
+      "Primary semantic recall over the index (closest to MemPalace search): multi_match on content (boosted), opportunity, title, wing, room. Use for open-ended questions about past work, deals, meetings, and transcripts—not only opportunities. Optional filters: account, stage. Prefer this over elastic_get_1_2_3 for history. Pass max_content_chars to truncate long drawer bodies in the response.",
     inputSchema: z.object({
       query: z.string().min(1).describe("Search text"),
       account_filter: z.string().optional().describe("Exact account keyword filter"),
       stage_filter: z.string().optional().describe("Exact stage keyword filter"),
-      limit: z.number().int().min(1).max(50).optional().default(10),
+      limit: z.number().int().min(1).max(50).optional().default(18),
+      max_content_chars: z
+        .number()
+        .int()
+        .min(400)
+        .max(20000)
+        .optional()
+        .describe(
+          "If set, each hit's content field is truncated to this many characters in the JSON (large migrated drawers). Omit to return full content."
+        ),
     }),
   },
-  async ({ query, account_filter, stage_filter, limit }) => {
+  async ({ query, account_filter, stage_filter, limit, max_content_chars }) => {
     try {
       const filter = [];
       if (account_filter) filter.push({ term: { account: account_filter } });
@@ -216,7 +240,7 @@ server.registerTool(
         results: hits.map((h) => ({
           id: h._id,
           score: h._score,
-          ...h._source,
+          ...trimHitSource(h._source, max_content_chars),
         })),
       });
     } catch (e) {
