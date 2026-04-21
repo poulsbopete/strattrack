@@ -252,23 +252,33 @@ server.registerTool(
   "elastic_get_1_2_3",
   {
     description:
-      "Pull recent indexed notes (last N days) and return a draft ONE–TWO–THREE update plus blocker highlights from blocker_tags and title.",
+      "Pull indexed notes for a ONE–TWO–THREE draft plus blocker highlights. Default: no date filter—sorts by note_date/created_at so bulk-imported or migrated rows (old original timestamps) still appear. Pass days>0 to restrict to created_at within the last N days.",
     inputSchema: z.object({
-      days: z.number().min(1).max(30).optional().default(7),
+      days: z
+        .number()
+        .int()
+        .min(0)
+        .max(3650)
+        .optional()
+        .default(0)
+        .describe("0 = all time (default). 1–3650 = only documents with created_at in the last N days."),
       size: z.number().int().min(1).max(50).optional().default(20),
     }),
   },
   async ({ days, size }) => {
     try {
-      const gte = `now-${days}d/d`;
+      const gte = days > 0 ? `now-${days}d/d` : null;
       const body = {
         size,
         sort: [{ note_date: "desc" }, { created_at: "desc" }],
-        query: {
-          bool: {
-            filter: [{ range: { created_at: { gte } } }],
-          },
-        },
+        query:
+          gte != null
+            ? {
+                bool: {
+                  filter: [{ range: { created_at: { gte } } }],
+                },
+              }
+            : { match_all: {} },
         _source: true,
       };
       const res = await esFetch(`/${INDEX}/_search`, { method: "POST", body });

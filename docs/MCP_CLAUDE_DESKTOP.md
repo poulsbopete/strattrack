@@ -120,7 +120,7 @@ Keep **Elasticsearch running** (`./scripts/build-elastic-docker.sh`) while you t
 | `elastic_ensure_index` | Create index + mappings (idempotent) |
 | `elastic_search_opp` | Search notes / migrated drawers |
 | `elastic_add_note` | Index a single document |
-| `elastic_get_1_2_3` | Draft ONE–TWO–THREE from recent docs |
+| `elastic_get_1_2_3` | Draft ONE–TWO–THREE from indexed docs. Default **`days: 0`**: no `created_at` filter (sort only), so bulk/migrated rows with old timestamps still appear; set **`days`** to a positive number to restrict to the last N days. |
 | `elastic_sync_to_sf` | Stub until Phase 3+ |
 | `elastic_bulk_import` | Optional bulk import: up to 100 batched rows (content + optional metadata); day-to-day use **`elastic_add_note`** instead |
 
