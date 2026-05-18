@@ -27,9 +27,9 @@ Searchable notes for **Solution Architects**: index text into **Elasticsearch** 
 
 The **MCP does not use `SF_*`**. Those variables apply only if you run **`scripts/sfdc-poll-to-elasticsearch.mjs`** or **`scripts/thursday-123-opportunities.mjs`**. You can omit or comment out all Salesforce lines in `~/.config/strattrack/env.sh` until you need them.
 
-- **Where is the Consumer Key?** It is **`SF_CLIENT_ID`** — see **[docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md)** (App Manager → Connected App → Manage Consumer Details).
-- **`SF_AUDIENCE`** must be **`https://login.salesforce.com`** (production) or **`https://test.salesforce.com`** (sandbox) — **not** your `*.lightning.force.com` URL.
-- **Easier than JWT:** Salesforce CLI + **`scripts/print-sf-cli-session.mjs`** — [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md#if-you-cannot-use-jwt-no-integration-user--no-cert)
+- **No App Manager?** Use **[docs/SALESFORCE_NO_APP_MANAGER.md](docs/SALESFORCE_NO_APP_MANAGER.md)** (Salesforce CLI or browser `sid`) — set **`STRATTRACK_SF_ACCESS_TOKEN`** + **`STRATTRACK_SF_INSTANCE_URL`** and comment out JWT.
+- **Consumer Key (`SF_CLIENT_ID`)** — only if you have App Manager: **[docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md)**.
+- **`SF_AUDIENCE`** — **`https://login.salesforce.com`** (prod) or **`https://test.salesforce.com`** (sandbox) — **not** `*.lightning.force.com`.
 
 Full poll/cron doc: [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md) · Thursday 1–2–3: [docs/THURSDAY_123_CRON.md](docs/THURSDAY_123_CRON.md)
 
@@ -46,7 +46,7 @@ For offline or local-only dev, you can run Elasticsearch on **localhost** and se
 | [scripts/thursday-123-opportunities.mjs](scripts/thursday-123-opportunities.mjs) | Weekly ONE–TWO–THREE Markdown per Opportunity |
 | [scripts/print-sf-cli-session.mjs](scripts/print-sf-cli-session.mjs) | Use your **`sf`** CLI session instead of JWT |
 
-Docs: [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md) · [docs/THURSDAY_123_CRON.md](docs/THURSDAY_123_CRON.md) · [docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md)
+Docs: [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md) · [docs/THURSDAY_123_CRON.md](docs/THURSDAY_123_CRON.md) · [docs/SALESFORCE_NO_APP_MANAGER.md](docs/SALESFORCE_NO_APP_MANAGER.md) · [docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md)
 
 ## More docs
 
@@ -54,7 +54,7 @@ Docs: [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md) · [doc
 - [docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md) — API keys via Keychain
 - [docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md) — Granola → Drive → SFDC brief
 - [docs/MIGRATE_AI_ASSISTANTS_ELASTIC.md](docs/MIGRATE_AI_ASSISTANTS_ELASTIC.md) — team Elastic Cloud endpoint (`.es.` vs `.kb.`) + optional reindex
-
-## License
+- [docs/SALESFORCE_NO_APP_MANAGER.md](docs/SALESFORCE_NO_APP_MANAGER.md) — no App Manager: CLI or browser `sid`
+- [docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md) — Consumer Key + `SF_AUDIENCE` (when you have admin)
 
 Proprietary / internal — confirm with the repository owner.

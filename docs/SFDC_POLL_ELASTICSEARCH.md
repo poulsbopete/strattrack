@@ -15,9 +15,11 @@ First run (no state file): watermarks start at **`now - STRATTRACK_SFDC_INITIAL_
 
 ## Salesforce auth
 
-### If you cannot use JWT (no integration user / no cert)
+### If you cannot use JWT (no integration user / no cert, **or no App Manager**)
 
-StratTrack supports three patterns (see **`scripts/strattrack-env.example.sh`**):
+**Start here:** **[docs/SALESFORCE_NO_APP_MANAGER.md](./SALESFORCE_NO_APP_MANAGER.md)** — Salesforce CLI (`sf`) or browser **`sid`** session → **`STRATTRACK_SF_ACCESS_TOKEN`** + **`STRATTRACK_SF_INSTANCE_URL`** (no Consumer Key).
+
+StratTrack also supports (see **`scripts/strattrack-env.example.sh`**):
 
 1. **Bearer token from Salesforce CLI (your user)** — Install **`sf`**, run **`sf org login web`**, then:
    ```bash

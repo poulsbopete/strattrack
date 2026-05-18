@@ -21,7 +21,15 @@ export ELASTICSEARCH_API_KEY="REPLACE_WITH_ENCODED_API_KEY"
 # export STRATTRACK_INDEX="strattrack_drawers"
 # export ELASTICSEARCH_BASIC_AUTH=""   # alternative to API key (base64 user:pass)
 
-# --- Salesforce JWT (Connected App + integration user) ---
+# --- Salesforce WITHOUT App Manager (recommended if you lack Connected App admin) ---
+# After: sf org login web --alias myorg
+#   eval "$(node /ABSOLUTE/PATH/TO/strattrack/scripts/print-sf-cli-session.mjs --org myorg)"
+# Or copy sid cookie + instance URL — see docs/SALESFORCE_NO_APP_MANAGER.md
+# export STRATTRACK_SF_ACCESS_TOKEN="…"
+# export STRATTRACK_SF_INSTANCE_URL="https://YOURDOMAIN.my.salesforce.com"
+# When STRATTRACK_SF_* is set, comment out the entire JWT block below.
+
+# --- Salesforce JWT (Connected App + integration user) — requires App Manager ---
 # SF_CLIENT_ID = Consumer Key (Setup → App Manager → your Connected App → Manage Consumer Details).
 # SF_AUDIENCE = ONLY https://login.salesforce.com (production) OR https://test.salesforce.com (sandbox).
 #   Do NOT use your Lightning / My Domain URL (e.g. *.lightning.force.com) — JWT will fail.

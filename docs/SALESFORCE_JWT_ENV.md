@@ -1,5 +1,7 @@
 # Salesforce env vars for StratTrack scripts (`SF_*`)
 
+**No App Manager access?** Use the Salesforce CLI or a browser session ID — see **[docs/SALESFORCE_NO_APP_MANAGER.md](./SALESFORCE_NO_APP_MANAGER.md)** first. You can skip everything below until you have Connected App admin.
+
 The **MCP** (Cursor / Claude) only needs **`ELASTICSEARCH_URL`** and **`ELASTICSEARCH_API_KEY`**.  
 The **`SF_*`** variables are **only** for:
 
