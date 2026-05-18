@@ -1,48 +1,46 @@
 # Claude Desktop & Cursor — StratTrack Elasticsearch MCP
 
-**Team default:** **Claude Desktop 4** (`.mcpb` or `mcpServers`). Cursor is supported for developers who use it; see **Cursor (this repo)** below.
+**Team default:** **Claude Desktop 4** (`.mcpb` or `mcpServers`). Cursor is supported; see **Cursor (this repo)** below.
 
 ## Team model (default)
 
 StratTrack is:
 
-1. **Local Elasticsearch** (Docker/Podman) + index `strattrack_drawers`.
-2. This **MCP server** wired in **Claude Desktop** (primary) or **Cursor** (optional).
-3. Ongoing work: call **`elastic_add_note`** to append notes/decisions (running history for completions), **`elastic_search_opp`** to retrieve context, **`elastic_get_1_2_3`** for weekly-style summaries.
+1. **Elasticsearch** you can reach over HTTPS — intended **Elastic Cloud Serverless** (`ELASTICSEARCH_URL` + `ELASTICSEARCH_API_KEY`).
+2. This **MCP server** in **Claude Desktop** (primary) or **Cursor** (optional).
+3. Ongoing work: **`elastic_add_note`**, recall with **`elastic_search_opp`**, weekly-style packs with **`elastic_get_1_2_3`**.
 
-That gives the team **searchable, durable memory** in a **shared, MCP-addressable** index.
+That gives **searchable, durable memory** the model can query instead of you re-pasting long context.
 
 ## Do you need to wait for the terminal?
 
 **No.** If you ran `node strattrack-mcp.mjs` in a terminal and saw `[strattrack-mcp] connected …`, the server **started correctly**. It will **not exit** on its own: stdio MCP servers **block** and wait for the client (Claude Desktop or Cursor) to send JSON-RPC on stdin. That is normal.
 
 - **Stop the manual run:** press `Ctrl+C` when you are done sanity-checking.
-- **To actually test tools:** add the MCP to **Claude Desktop** (usual) or **Cursor** (below) so the app **spawns** its own `node …strattrack-mcp.mjs` process. You usually **do not** run the server by hand at the same time (two processes would fight if both used stdio — here only the client’s child process should run the MCP).
+- **To actually test tools:** add the MCP to **Claude Desktop** or **Cursor** so the app **spawns** its own `node …strattrack-mcp.mjs` process. You usually **do not** run the server by hand at the same time.
 
-## “Always on” — what should run 24/7?
+## “Always on” — what runs 24/7?
 
 | Layer | Always-on? | Why |
 |-------|------------|-----|
-| **Elasticsearch (Docker/Podman)** | **Yes (recommended)** | Holds your index and answers `http://localhost:9200` whenever tools run. Compose uses **`restart: unless-stopped`** so the container comes back after reboot until you `down` it. |
-| **MCP Node process (`strattrack-mcp.mjs`)** | **No (stdio design)** | This server speaks **MCP over stdin/stdout**. It is meant to be **started by Claude Desktop or Cursor** when a chat needs tools, then stopped when the session ends. Leaving a manual `node strattrack-mcp.mjs` in a terminal does **not** help the app (different process, no stdin pipe). |
-| **Future: HTTP MCP** | Possible | A long‑lived **network** MCP server is a separate mode (not implemented here). If you need that later, it would be a small HTTP service + client config change. |
-
-So: keep **Elasticsearch** running all the time; let the **IDE** launch the **MCP** when needed.
+| **Elasticsearch (Elastic Cloud / Serverless)** | **Yes (Elastic runs it)** | You only keep **`ELASTICSEARCH_URL`** (+ API key) configured in the MCP. |
+| **Optional: local Docker/Podman ES** | **Your choice** | If you use **localhost**, keep the compose stack up — see **[ELASTICSEARCH_LOCAL_ACCESS.md](./ELASTICSEARCH_LOCAL_ACCESS.md)**. |
+| **MCP Node process (`strattrack-mcp.mjs`)** | **No (stdio design)** | Started by Claude Desktop or Cursor when a chat needs tools. |
 
 ## Prerequisites
 
-1. Local Elasticsearch is running (`./scripts/build-elastic-docker.sh` or Podman equivalent).
+1. **`ELASTICSEARCH_URL`** is set (required — no default). **Serverless:** also **`ELASTICSEARCH_API_KEY`** (Kibana encoded key) unless you use **`ELASTICSEARCH_BASIC_AUTH`**.
 2. Node.js **18+** on your machine.
-3. From the repo: `cd mcp && npm install` (once).
+3. From the repo: `cd mcp && npm install` (once), if you run MCP from source.
 
 ## Environment
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `ELASTICSEARCH_URL` | `http://localhost:9200` | Elasticsearch HTTP endpoint |
-| `STRATTRACK_INDEX` | `strattrack_drawers` | Index name for notes and search |
-| `ELASTICSEARCH_API_KEY` | _(unset)_ | Optional; Kibana **Encoded** API key when Elasticsearch has security on |
-| `ELASTICSEARCH_BASIC_AUTH` | _(unset)_ | Optional; **base64**(`user:pass`) for Basic auth |
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `ELASTICSEARCH_URL` | **Yes** | Elasticsearch HTTPS endpoint (e.g. Serverless). Optional local dev: `http://localhost:9200` after Docker/Podman. |
+| `STRATTRACK_INDEX` | No (default `strattrack_drawers`) | Index name |
+| `ELASTICSEARCH_API_KEY` | For Elastic Cloud / Serverless | Kibana **Encoded** API key |
+| `ELASTICSEARCH_BASIC_AUTH` | Optional | **base64**(`user:pass`) instead of API key |
 
 ### Secrets: macOS Keychain (recommended on Mac)
 
@@ -66,7 +64,7 @@ StratTrack ships a **Desktop Extension** bundle (server + `node_modules` + index
 1. Open **[Releases](https://github.com/poulsbopete/strattrack/releases)** for this repository.
 2. Under **Assets** on the release you want, download **`strattrack-elasticsearch.mcpb`**.
 3. In **Claude Desktop**: **Settings → Extensions → Install Extension…** (or **Developer → Install extension**) and select the downloaded file. On macOS, **double-click** the `.mcpb` if your system opens it with Claude Desktop.
-4. When prompted, confirm defaults (**`http://localhost:9200`**, index **`strattrack_drawers`**) or adjust for your machine.
+4. When prompted, set **`ELASTICSEARCH_URL`** to your **Serverless HTTPS** endpoint and paste **`ELASTICSEARCH_API_KEY`**. For optional local Docker ES, use `http://localhost:9200` (often no API key).
 
 CI attaches each tagged build to Releases — see **[GITHUB_PUBLISH.md](./GITHUB_PUBLISH.md)**.
 
@@ -95,7 +93,8 @@ Edit your Claude Desktop MCP configuration and add a server entry (paths must be
       "command": "node",
       "args": ["/Users/YOU/opt/strattrack/mcp/strattrack-mcp.mjs"],
       "env": {
-        "ELASTICSEARCH_URL": "http://localhost:9200",
+        "ELASTICSEARCH_URL": "https://YOUR-PROJECT.es.REGION.aws.elastic.cloud",
+        "ELASTICSEARCH_API_KEY": "YOUR_ENCODED_API_KEY",
         "STRATTRACK_INDEX": "strattrack_drawers"
       }
     }
@@ -122,7 +121,7 @@ If you use the **`.mcpb` extension**, keep **`mcpServers` free of StratTrack** (
 3. Open **Cursor Settings → MCP** (or the MCP panel) and ensure the server is enabled; restart Cursor if it does not pick up the file.
 4. In chat, use **Agent** mode if your product requires it for tool use, then try a prompt that calls `elastic_cluster_health`.
 
-Keep **Elasticsearch running** (`./scripts/build-elastic-docker.sh`) while you test.
+Keep your **Elasticsearch** project running (Elastic Cloud handles this for Serverless). If you use **local** Docker ES instead, keep that stack up while you test — see **[ELASTICSEARCH_LOCAL_ACCESS.md](./ELASTICSEARCH_LOCAL_ACCESS.md)**.
 
 ## Tools exposed
 

@@ -55,7 +55,7 @@ npm install @poulsbopete/strattrack-mcp
   "command": "strattrack-mcp",
   "args": [],
   "env": {
-    "ELASTICSEARCH_URL": "http://localhost:9200",
+    "ELASTICSEARCH_URL": "https://ai-assistants-ffcafb.es.us-east-1.aws.elastic.cloud",
     "STRATTRACK_INDEX": "strattrack_drawers"
   }
 }

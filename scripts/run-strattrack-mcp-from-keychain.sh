@@ -11,7 +11,7 @@ read_keychain() {
   security find-generic-password -a "${KEYCHAIN_ACCOUNT}" -s "${service_id}" -w 2>/dev/null || true
 }
 
-# Elasticsearch API key (optional; local Docker ES often has no auth)
+# Elasticsearch API key (required for Elastic Cloud / Serverless; optional for unsecured local Docker)
 if [[ -z "${ELASTICSEARCH_API_KEY:-}" ]]; then
   v="$(read_keychain "strattrack.elasticsearch.api_key")"
   if [[ -n "$v" ]]; then
@@ -27,7 +27,10 @@ if [[ -z "${ELASTICSEARCH_BASIC_AUTH:-}" ]]; then
   fi
 fi
 
-export ELASTICSEARCH_URL="${ELASTICSEARCH_URL:-http://localhost:9200}"
+if [[ -z "${ELASTICSEARCH_URL:-}" ]]; then
+  echo "Set ELASTICSEARCH_URL before running this script (or export it in your environment)." >&2
+  exit 1
+fi
 export STRATTRACK_INDEX="${STRATTRACK_INDEX:-strattrack_drawers}"
 
 exec node "${ROOT_DIR}/mcp/strattrack-mcp.mjs"

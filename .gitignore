@@ -3,11 +3,18 @@ mcp/strattrack-drawers-index.json
 
 # Dependencies
 node_modules/
+.venv-migrate/
 
 # Environment and secrets
 .env
 .env.*
 !.env.example
+
+# Salesforce → Elasticsearch poll worker (local high-water marks)
+.strattrack-sfdc-watermark.json
+
+# Thursday 1-2-3 generator output (see docs/THURSDAY_123_CRON.md)
+thursday-123-output/
 
 # Logs and OS
 *.log

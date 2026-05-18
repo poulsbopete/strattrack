@@ -144,8 +144,9 @@ if [[ "${PODMAN_COMPAT}" == true ]]; then
 fi
 
 echo ""
-echo "StratTrack local Elasticsearch is up (restart policy: unless-stopped — survives reboot until 'compose down')."
+echo "StratTrack optional local Elasticsearch is up (restart policy: unless-stopped — survives reboot until 'compose down')."
 echo "  HTTP:   http://localhost:9200"
+echo "  MCP:    set ELASTICSEARCH_URL=http://localhost:9200 (default only for this laptop stack; Serverless uses your HTTPS URL)."
 echo "  Stop:   cd \"${ROOT_DIR}\" && ${COMPOSE_BACKEND} compose -f docker/docker-compose.elasticsearch.yml${COMPAT_FILES} down"
 echo "  Logs:   cd \"${ROOT_DIR}\" && ${COMPOSE_BACKEND} compose -f docker/docker-compose.elasticsearch.yml${COMPAT_FILES} logs -f elasticsearch"
 if [[ "${PODMAN_COMPAT}" != true ]]; then

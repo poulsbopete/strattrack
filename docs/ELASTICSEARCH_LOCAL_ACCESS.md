@@ -1,16 +1,16 @@
-# Accessing local Elasticsearch (Docker / Podman)
+# Optional: local Elasticsearch (Docker / Podman)
 
-StratTrack’s compose file runs Elasticsearch with **`xpack.security.enabled=false`** for frictionless local development. That means **there is no username or password** — you do not “log in” with credentials; you **open the HTTP API** on port **9200**.
+StratTrack’s **default** is **Elastic Cloud Serverless** (or any reachable HTTPS Elasticsearch): set **`ELASTICSEARCH_URL`** and **`ELASTICSEARCH_API_KEY`** for the MCP — no Docker required.
+
+**This guide** is only if you want **Elasticsearch on your laptop** at **`http://localhost:9200`** (e.g. offline dev). Compose uses **`xpack.security.enabled=false`**, so there is **no** username/password for that local stack.
 
 ---
 
 ## Persistence (always-on data plane)
 
-The compose service sets **`restart: unless-stopped`**: after a machine reboot, Docker (or Podman) will start **Elasticsearch** again until you run **`docker compose … down`**. That is what you want for a stable **`localhost:9200`** endpoint for Cursor/MCP.
+The compose service sets **`restart: unless-stopped`**: after a machine reboot, Docker (or Podman) will start **Elasticsearch** again until you run **`docker compose … down`**. That gives a stable **`localhost:9200`** endpoint when you choose this optional path.
 
-The **MCP Node process** is **not** configured as a daemon here — see **[MCP_CLAUDE_DESKTOP.md](./MCP_CLAUDE_DESKTOP.md#always-on--what-should-run-247)**.
-
----
+The **MCP Node process** is **not** a daemon — see **[MCP_CLAUDE_DESKTOP.md](./MCP_CLAUDE_DESKTOP.md)**.
 
 ## 1. Confirm the container is running
 

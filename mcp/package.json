@@ -2,7 +2,7 @@
   "name": "@poulsbopete/strattrack-mcp",
   "version": "0.1.0",
   "type": "module",
-  "description": "StratTrack MCP server — local Elasticsearch tools (elastic_search_opp, elastic_add_note, elastic_get_1_2_3, …)",
+  "description": "StratTrack MCP server — Elasticsearch tools (elastic_search_opp, elastic_add_note, elastic_get_1_2_3, …). Requires ELASTICSEARCH_URL.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=18"

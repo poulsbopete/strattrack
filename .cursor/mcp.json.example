@@ -4,7 +4,8 @@
       "command": "node",
       "args": ["/ABSOLUTE/PATH/TO/strattrack/mcp/strattrack-mcp.mjs"],
       "env": {
-        "ELASTICSEARCH_URL": "http://localhost:9200",
+        "ELASTICSEARCH_URL": "https://ai-assistants-ffcafb.es.us-east-1.aws.elastic.cloud",
+        "ELASTICSEARCH_API_KEY": "YOUR_ENCODED_API_KEY",
         "STRATTRACK_INDEX": "strattrack_drawers"
       }
     }

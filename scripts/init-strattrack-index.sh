@@ -3,8 +3,12 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-ES_URL="${ELASTICSEARCH_URL:-http://localhost:9200}"
+ES_URL="${ELASTICSEARCH_URL:-}"
 ES_URL="${ES_URL%/}"
+if [[ -z "$ES_URL" ]]; then
+  echo "Set ELASTICSEARCH_URL (Elastic Cloud Serverless HTTPS, or http://localhost:9200 for optional local Docker)." >&2
+  exit 1
+fi
 INDEX="${STRATTRACK_INDEX:-strattrack_drawers}"
 BODY="${ROOT_DIR}/docker/strattrack-drawers-index.json"
 

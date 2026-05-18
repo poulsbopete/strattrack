@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * StratTrack MCP — stdio server talking to local Elasticsearch (Docker/Podman).
+ * StratTrack MCP — stdio server talking to Elasticsearch (Elastic Cloud Serverless by default).
  * Log only to stderr; stdout is reserved for MCP JSON-RPC.
  */
 import { existsSync, readFileSync } from "node:fs";
@@ -23,7 +23,14 @@ if (!indexJsonPath) {
 }
 const INDEX_SETTINGS = JSON.parse(readFileSync(indexJsonPath, "utf8"));
 
-const ES_URL = (process.env.ELASTICSEARCH_URL || "http://localhost:9200").replace(/\/$/, "");
+const rawEs = (process.env.ELASTICSEARCH_URL || "").trim().replace(/\/$/, "");
+if (!rawEs) {
+  console.error(
+    "[strattrack-mcp] ELASTICSEARCH_URL is required. Use your Elastic Cloud Serverless (or managed) Elasticsearch HTTPS URL and set ELASTICSEARCH_API_KEY (or ELASTICSEARCH_BASIC_AUTH). Optional laptop-only ES: see docs/ELASTICSEARCH_LOCAL_ACCESS.md then set ELASTICSEARCH_URL=http://localhost:9200."
+  );
+  process.exit(1);
+}
+const ES_URL = rawEs;
 const INDEX = process.env.STRATTRACK_INDEX || "strattrack_drawers";
 
 function log(...args) {
@@ -124,11 +131,11 @@ const server = new McpServer(
   { name: "strattrack-elasticsearch", version: "0.1.0" },
   {
     instructions: [
-      "StratTrack MCP uses local Elasticsearch (default http://localhost:9200, index strattrack_drawers).",
+      "StratTrack MCP uses Elasticsearch at ELASTICSEARCH_URL (index strattrack_drawers by default). Elastic Cloud Serverless needs ELASTICSEARCH_API_KEY.",
       "MemPalace-style recall: use elastic_search_opp with rich natural-language queries (account names, deal topics, acronyms). It scores full-text content, titles, wing, room, and opportunity fields. Run several searches with different phrasings if the first pass is thin.",
       "elastic_get_1_2_3 is NOT full memory: it returns a compact snapshot from the newest N documents (plus index_doc_count). Do not use it alone to answer open-ended history questions.",
       "Structured pipeline fields (account, opportunity, stage, ACV) appear when notes are added with elastic_add_note or imports that include those fields; migrated MemPalace rows are mostly narrative text—summarize ACV from content only when it is written there, or use CRM elsewhere.",
-      "After starting Docker/Podman ES, call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing.",
+      "Call elastic_ensure_index once (or ./scripts/init-strattrack-index.sh) before heavy indexing if the index is missing.",
       "elastic_bulk_import is optional: batched rows for one-off or legacy data; max 100 items per call. Prefer elastic_add_note for ongoing work.",
       "When the user wants a pulse / readiness / sync-style summary after you used StratTrack tools (or they ask for that tone), answer in markdown: start with a short line like **STATUS: …** (optional leading emoji e.g. target for ready). Then a line \"You have:\" followed by bullets; each bullet starts with ✅ and **bold** the key numbers, names, and dates. End with one confident closing sentence and 🚀. Every factual bullet must come from tool output or text the user supplied—do not invent calendar counts, pipeline dollars, or opportunity totals.",
     ].join(" "),
@@ -390,7 +397,7 @@ server.registerTool(
       ok: false,
       phase: "stub",
       message:
-        "Salesforce sync is not implemented in this MCP build. Use CRM UI or a future strattrack worker; pass opportunity_id when available.",
+        "Salesforce → Elasticsearch sync runs outside the MCP: run scripts/sfdc-poll-to-elasticsearch.mjs (see docs/SFDC_POLL_ELASTICSEARCH.md). This tool remains a stub for future bidirectional helpers.",
       opportunity_id: opportunity_id ?? null,
     });
   }

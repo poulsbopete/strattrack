@@ -3,7 +3,7 @@
   "name": "strattrack-elasticsearch",
   "display_name": "StratTrack Elasticsearch",
   "version": "0.1.0",
-  "description": "Local Elasticsearch MCP for StratTrack: index notes, search, and 1-2-3 drafts. Requires Docker/Podman Elasticsearch on your machine.",
+  "description": "StratTrack MCP for Elasticsearch (Elastic Cloud Serverless by default): index notes, search, and 1-2-3 drafts.",
   "author": {
     "name": "StratTrack",
     "url": "https://github.com/poulsbopete/strattrack"
@@ -21,6 +21,7 @@
       "args": ["${__dirname}/server/strattrack-mcp.mjs"],
       "env": {
         "ELASTICSEARCH_URL": "${user_config.elasticsearch_url}",
+        "ELASTICSEARCH_API_KEY": "${user_config.elasticsearch_api_key}",
         "STRATTRACK_INDEX": "${user_config.strattrack_index}"
       }
     }
@@ -29,8 +30,15 @@
     "elasticsearch_url": {
       "type": "string",
       "title": "Elasticsearch URL",
-      "description": "HTTP endpoint for your local StratTrack cluster (start with ./scripts/build-elastic-docker.sh).",
-      "default": "http://localhost:9200",
+      "description": "HTTPS endpoint (e.g. Elastic Cloud Serverless). Optional local dev: http://localhost:9200 after ./scripts/quickstart-local-es.sh.",
+      "default": "",
+      "required": true
+    },
+    "elasticsearch_api_key": {
+      "type": "string",
+      "title": "Elasticsearch API key (optional for local)",
+      "description": "Kibana “Encoded” API key for Elastic Cloud / Serverless. Leave empty only for unsecured local Docker.",
+      "default": "",
       "required": false
     },
     "strattrack_index": {

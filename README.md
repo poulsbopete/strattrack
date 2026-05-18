@@ -1,75 +1,60 @@
 # StratTrack
 
-Elasticsearch-backed notes and search for **Solution Architects**, with **Salesforce** alignment in scope. **Team default:** StratTrack **MCP** (`elastic_add_note`, `elastic_search_opp`, `elastic_get_1_2_3`).
+Searchable notes for **Solution Architects**: index text into **Elasticsearch** (intended **Elastic Cloud Serverless**), recall it from **Cursor / Claude** via the **MCP** (`elastic_add_note`, `elastic_search_opp`, `elastic_get_1_2_3`). Optional **Salesforce** sync and weekly **ONE–TWO–THREE** scripts live in `scripts/`.
 
-**Remote:** `git@github.com:poulsbopete/strattrack.git`  
-**Releases / npm package:** tag `v*` → GitHub Packages + `.mcpb` on Releases — **[docs/GITHUB_PUBLISH.md](docs/GITHUB_PUBLISH.md)**  
-**GitHub Pages (SA pitch deck):** repo **Settings → Pages →** branch **main**, folder **`/docs`** — site root is **[docs/index.html](docs/index.html)** (e.g. `https://poulsbopete.github.io/strattrack/` once enabled).
+**Repository:** [github.com/poulsbopete/strattrack](https://github.com/poulsbopete/strattrack) — documentation in the **`main`** branch (and this README) updates when changes are **pushed** to GitHub. If the site looks stale, pull latest or ask the repo owner to push.
 
-## Why this matters
+## Quick start (Serverless)
 
-- **Completion history on your machine.** Notes and structured outputs live in **local Elasticsearch**, so you keep a durable record of what the model produced and when—not only what is visible in the current chat window.
-- **Fewer tokens, same answers.** The assistant can **search and pull prior completions** from the index instead of you pasting long context again or asking it to regenerate the same summaries. That cuts input tokens and speeds up follow-ups on accounts, opportunities, and technical notes you already stored.
+1. Create an **Elasticsearch** project in **Elastic Cloud** (Serverless is fine) and an **API key**.
+2. Clone this repo (for scripts, docs, and MCP from source—or use the **`.mcpb`** release only).
+3. Set **`ELASTICSEARCH_URL`** (HTTPS endpoint, no trailing slash) and **`ELASTICSEARCH_API_KEY`** wherever you configure the MCP (Cursor **`.cursor/mcp.json`**, Claude Desktop extension env, or [scripts/with-strattrack-env.sh](scripts/with-strattrack-env.sh) + [scripts/strattrack-env.example.sh](scripts/strattrack-env.example.sh)).
+4. Start the MCP and run **`elastic_ensure_index`** once (or `./scripts/init-strattrack-index.sh` with the same env).
 
-## Quick start
+**Why bother:** durable, **searchable** history so the model can **pull prior notes** instead of you re-pasting long context—fewer tokens on follow-ups.
 
-You need a **local copy of this repository** to run Docker/Podman and the index scripts (compose files and `docker/strattrack-drawers-index.json` live in the tree). There is no separate “click-only” installer for Elasticsearch—you **clone or download ZIP**, then run one script.
+## MCP (Cursor & Claude)
 
-**Copy-paste (Docker/Podman already installed):**
-
-```bash
-git clone --depth 1 https://github.com/poulsbopete/strattrack.git && cd strattrack && ./scripts/quickstart-local-es.sh
-```
-
-That clones, starts Elasticsearch, and creates **`strattrack_drawers`** if it is missing. Podman + mlock issues: append `--podman-compat` to the last command.
-
-| Step | Command / link |
-|------|------------------|
-| 1. Get the repository | **`git clone https://github.com/poulsbopete/strattrack.git`** then **`cd strattrack`**, or **Code → Download ZIP** on GitHub, unzip, and `cd` into the folder. |
-| 2. Elasticsearch + index | **`./scripts/quickstart-local-es.sh`** (starts ES and runs **`init-strattrack-index.sh`**). Or run **`./scripts/build-elastic-docker.sh`** then **`./scripts/init-strattrack-index.sh`** separately. |
-| 3. MCP from source (optional) | **`cd mcp && npm install`** — **skip** if you only use the Release **`.mcpb`** (bundled server). |
-| 4. Claude Desktop 4 (primary) | **Releases → download → install** (steps below). Details: **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)**. *Cursor:* **`.cursor/mcp.json.example`** |
-
-#### Step 4 — Claude Desktop 4 (from GitHub Releases)
-
-1. Open **[github.com/poulsbopete/strattrack/releases](https://github.com/poulsbopete/strattrack/releases)** and pick the latest release (or the version you want).
-2. Under **Assets**, download **`strattrack-elasticsearch.mcpb`** to your machine (e.g. Downloads).
-3. Open **Claude Desktop** → **Settings → Extensions → Install Extension…** (wording may be **Developer → Install extension** in some builds). Choose the downloaded `.mcpb`. On macOS, **double-clicking** the file may open the same flow if `.mcpb` is associated with Claude Desktop.
-4. When the extension prompts for connection details, keep defaults **`http://localhost:9200`** and index **`strattrack_drawers`** unless your Elasticsearch URL or index name differs.
-5. Restart or reload Claude Desktop if it does not pick up the extension immediately. Local Elasticsearch from **step 2** (or the one-liner above) should already be running.
-
-**Alternatives:** build a local `.mcpb` from the repo (`./scripts/build-strattrack-mcpb.sh`) or add a manual `mcpServers` entry — see **[docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md)**.
-
-More: **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)** (curl, container shell), **[docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md)** (secrets), **[docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md)** (Drive / SFDC / IT brief).
-
-## MCP & packaging
-
-| Item | Notes |
+| Path | Notes |
 |------|--------|
-| Local ES + index | **`scripts/quickstart-local-es.sh`** — wraps **`build-elastic-docker.sh`** + **`init-strattrack-index.sh`** |
-| Server | `mcp/strattrack-mcp.mjs` — stdio MCP, `fetch` to Elasticsearch |
-| npm (GitHub Packages) | `@poulsbopete/strattrack-mcp` — see **GITHUB_PUBLISH** |
-| Claude `.mcpb` | `./scripts/build-strattrack-mcpb.sh` → `dist/…mcpb`; manifest in **`extensions/strattrack-elasticsearch/`** |
-| Skill | **`skills/strattrack-elasticsearch-mcp/SKILL.md`** |
+| **Releases** | [Releases](https://github.com/poulsbopete/strattrack/releases) → **`strattrack-elasticsearch.mcpb`** — set extension env to your **`ELASTICSEARCH_URL`** + **`ELASTICSEARCH_API_KEY`** |
+| **From source** | `cd mcp && npm install` → run `mcp/strattrack-mcp.mjs`; Cursor: **`.cursor/mcp.json.example`** → **`.cursor/mcp.json`** |
+| **Details** | [docs/MCP_CLAUDE_DESKTOP.md](docs/MCP_CLAUDE_DESKTOP.md) |
 
-## Local Elasticsearch (detail)
+`ELASTICSEARCH_URL` is **required**; there is no silent default.
 
-- **Podman** or second engine: `STRATTRACK_CONTAINER_RUNTIME=podman ./scripts/build-elastic-docker.sh`
-- **Rootless mlock:** `--podman-compat`
-- **Stop:** `docker compose -f docker/docker-compose.elasticsearch.yml down` (add second `-f` …`podman-compat.yml` if you used it)
-- **Restart policy:** `unless-stopped` on ES — see MCP doc “always on”
+### Salesforce (optional — poll & Thursday scripts only)
 
-## Status & planning
+The **MCP does not use `SF_*`**. Those variables apply only if you run **`scripts/sfdc-poll-to-elasticsearch.mjs`** or **`scripts/thursday-123-opportunities.mjs`**. You can omit or comment out all Salesforce lines in `~/.config/strattrack/env.sh` until you need them.
 
-| Phase | Link |
-|-------|------|
-| Phase 2 MCP hardening | [docs/PHASE2_PLAN.md](docs/PHASE2_PLAN.md) |
-| Phase 3+ | Salesforce sync, dashboards (planned) |
+- **Where is the Consumer Key?** It is **`SF_CLIENT_ID`** — see **[docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md)** (App Manager → Connected App → Manage Consumer Details).
+- **`SF_AUDIENCE`** must be **`https://login.salesforce.com`** (production) or **`https://test.salesforce.com`** (sandbox) — **not** your `*.lightning.force.com` URL.
+- **Easier than JWT:** Salesforce CLI + **`scripts/print-sf-cli-session.mjs`** — [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md#if-you-cannot-use-jwt-no-integration-user--no-cert)
 
-## Git
+Full poll/cron doc: [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md) · Thursday 1–2–3: [docs/THURSDAY_123_CRON.md](docs/THURSDAY_123_CRON.md)
 
-Push completed work to **`origin`**. Feature branch: `git push -u origin feature/…`; `main`: `git push origin main`.
+## Optional: laptop Elasticsearch (Docker / Podman)
+
+For offline or local-only dev, you can run Elasticsearch on **localhost** and set `ELASTICSEARCH_URL=http://localhost:9200` (often no API key). See **[docs/ELASTICSEARCH_LOCAL_ACCESS.md](docs/ELASTICSEARCH_LOCAL_ACCESS.md)** and `./scripts/quickstart-local-es.sh`.
+
+## Salesforce & automation (optional)
+
+| Script | Purpose |
+|--------|---------|
+| [scripts/with-strattrack-env.sh](scripts/with-strattrack-env.sh) | Load `ELASTICSEARCH_*` + Salesforce vars from `~/.config/strattrack/env.sh` |
+| [scripts/sfdc-poll-to-elasticsearch.mjs](scripts/sfdc-poll-to-elasticsearch.mjs) | Poll SF by `LastModifiedDate` → ES |
+| [scripts/thursday-123-opportunities.mjs](scripts/thursday-123-opportunities.mjs) | Weekly ONE–TWO–THREE Markdown per Opportunity |
+| [scripts/print-sf-cli-session.mjs](scripts/print-sf-cli-session.mjs) | Use your **`sf`** CLI session instead of JWT |
+
+Docs: [docs/SFDC_POLL_ELASTICSEARCH.md](docs/SFDC_POLL_ELASTICSEARCH.md) · [docs/THURSDAY_123_CRON.md](docs/THURSDAY_123_CRON.md) · [docs/SALESFORCE_JWT_ENV.md](docs/SALESFORCE_JWT_ENV.md)
+
+## More docs
+
+- [docs/index.html](docs/index.html) — SA pitch deck (GitHub Pages: `main` / `docs`)
+- [docs/MACOS_KEYCHAIN.md](docs/MACOS_KEYCHAIN.md) — API keys via Keychain
+- [docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md](docs/GRANOLA_DRIVE_SFDC_AI_WORKFLOW.md) — Granola → Drive → SFDC brief
+- [docs/MIGRATE_AI_ASSISTANTS_ELASTIC.md](docs/MIGRATE_AI_ASSISTANTS_ELASTIC.md) — team Elastic Cloud endpoint (`.es.` vs `.kb.`) + optional reindex
 
 ## License
 
-Proprietary / internal — confirm with repository owner.
+Proprietary / internal — confirm with the repository owner.
